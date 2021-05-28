@@ -35,6 +35,7 @@ void yyerror(const char* s);
 %token <location> BREAK
 %token <location> CONTINUE
 %token <location> RETURN
+%token <location> ENUM
 
 // Operators
 %token <location> INC
@@ -105,6 +106,7 @@ stmt:               ';'                         {  }
     |               for_stmt                    {  }
     |               function                    {  }
     |               return_stmt ';'             {  }
+    |               enum_stmt ';'               {  }
     ;
 
 branch_body:        stmt                        {  }
@@ -236,6 +238,24 @@ return_stmt:        RETURN expression                   {  }
     ;
 
 
+enum_stmt:          ENUM enum_name '{' enum_elements '}'   {  }
+    ;
+
+enum_elements:  /* empty */                                  {  }
+    |               ident                                    {  }
+    |               ident '=' expression                     {  }
+    |               enum_list_ext ',' ident                  {  }
+    |               enum_list_ext ',' ident '=' expression   {  }
+    ;
+enum_name:          /* empty */                         {  }
+    |               ident                               {  }
+    ;
+enum_list_ext:      /* empty */                              {  }
+    |               ident                                    {  }
+    |               ident '=' expression                     {  }
+    |               enum_list_ext ',' ident                  {  }
+    |               enum_list_ext ',' ident '=' expression   {  }
+    ;
 type:               TYPE_INT        {  }
     |               TYPE_FLOAT      {  }
     |               TYPE_CHAR       {  }

@@ -45,6 +45,7 @@ IDENTIFIER          {LETTER}({LETTER}|{DIGIT})*
 "break"                       saveLoc(); return BREAK;       
 "continue"                    saveLoc(); return CONTINUE;    
 "return"                      saveLoc(); return RETURN;      
+"enum"                        saveLoc(); return ENUM;
 
 "++"                          saveLoc(); return INC;             
 "--"                          saveLoc(); return DEC;             
