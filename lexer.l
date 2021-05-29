@@ -13,9 +13,8 @@ Location curLoc = {1,0,0};
 
 DIGIT               [0-9]
 INTEGER             ([1-9][0-9]*)|0 
-FLOAT               {INTEGER}\.{INTEGER}
 EXP                 [eE][-+]?{INTEGER}
-REAL                {INTEGER}{EXP}|{FLOAT}{EXP}?
+FLOAT               {INTEGER}\.{INTEGER}{EXP}?|{INTEGER}{EXP}
 LETTER              [a-zA-Z_]
 IDENTIFIER          {LETTER}({LETTER}|{DIGIT})*
 
@@ -46,21 +45,17 @@ IDENTIFIER          {LETTER}({LETTER}|{DIGIT})*
 "continue"                    saveLoc(); return CONTINUE;    
 "return"                      saveLoc(); return RETURN;      
 "enum"                        saveLoc(); return ENUM;
-
-"++"                          saveLoc(); return INC;             
-"--"                          saveLoc(); return DEC;             
-"=="                          saveLoc(); return EQUAL;           
-"!="                          saveLoc(); return NOT_EQUAL;       
-">="                          saveLoc(); return GREATER_EQUAL;   
-"<="                          saveLoc(); return LESS_EQUAL;      
-"<<"                          saveLoc(); return SHL;             
-">>"                          saveLoc(); return SHR;             
+        
+"=="                          saveLoc(); return EQ;           
+"!="                          saveLoc(); return NEQ;       
+">="                          saveLoc(); return GTE;   
+"<="                          saveLoc(); return LTE;                 
 "&&"                          saveLoc(); return LOGICAL_AND;     
 "||"                          saveLoc(); return LOGICAL_OR;      
 [-+*/%&|^~!<>=(){}[\],:;]     saveLoc(); return yytext[0];       
 
 {INTEGER}                     tokenize(); return INTEGER;        
-{REAL}                        tokenize(); return FLOAT;          
+{FLOAT}                       tokenize(); return FLOAT;          
 (\'.\')                       tokenize(); return CHAR;           
 "true"                        tokenize(); return BOOL;           
 "false"                       tokenize(); return BOOL;           

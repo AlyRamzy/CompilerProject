@@ -38,16 +38,12 @@ void yyerror(const char* s);
 %token <location> ENUM
 
 // Operators
-%token <location> INC
-%token <location> DEC
-%token <location> SHL
-%token <location> SHR
 %token <location> LOGICAL_AND
 %token <location> LOGICAL_OR
-%token <location> EQUAL
-%token <location> NOT_EQUAL
-%token <location> GREATER_EQUAL
-%token <location> LESS_EQUAL
+%token <location> EQ
+%token <location> NEQ
+%token <location> GTE
+%token <location> LTE
 
 // Values
 %token <token> INTEGER
@@ -64,15 +60,12 @@ void yyerror(const char* s);
 %left       '|'
 %left       '^'
 %left       '&'
-%left       EQUAL NOT_EQUAL
-%left       LESS_EQUAL GREATER_EQUAL '<' '>'
-%left       SHR SHL
+%left       EQ NEQ
+%left       LTE GTE '<' '>'
 %left       '-' '+'
 %left       '*' '/' '%'
 %right      '!' '~'
 %right      U_PLUS U_MINUS
-%right      PRE_INC PRE_DEC
-%left       SUF_INC SUF_DEC
 
 %nonassoc   IF_UNMAT
 %nonassoc   ELSE
@@ -122,12 +115,7 @@ var_decl:           type ident                              {  }
     ;
 
 
-expression:         expr_typ_1
-    |               expr_typ_2
-    |               expr_typ_3
-    ;
-
-expr_typ_1:         expression '=' expression               {  }
+expression:         expression '=' expression               {  }
     |               expression '+' expression               {  }
     |               expression '-' expression               {  }
     |               expression '*' expression               {  }
@@ -136,29 +124,19 @@ expr_typ_1:         expression '=' expression               {  }
     |               expression '&' expression               {  }
     |               expression '|' expression               {  }
     |               expression '^' expression               {  }
-    |               expression SHL expression               {  }
-    |               expression SHR expression               {  }
     |               expression LOGICAL_AND expression       {  }
     |               expression LOGICAL_OR expression        {  }
     |               expression '>' expression               {  }
-    |               expression GREATER_EQUAL expression     {  }
+    |               expression GTE expression               {  }
     |               expression '<' expression               {  }
-    |               expression LESS_EQUAL expression        {  }
-    |               expression EQUAL expression             {  }
-    |               expression NOT_EQUAL expression         {  }
+    |               expression LTE expression               {  }
+    |               expression EQ expression                {  }
+    |               expression NEQ expression               {  }
     |               '+' expression %prec U_PLUS             {  }
     |               '-' expression %prec U_MINUS            {  }
     |               '~' expression                          {  }
     |               '!' expression                          {  }
-    ;
-
-expr_typ_2:         INC expr_typ_3 %prec PRE_INC                {  }
-    |               DEC expr_typ_3 %prec PRE_DEC                {  }
-    |               expr_typ_3 INC %prec SUF_INC                {  }
-    |               expr_typ_3 DEC %prec SUF_DEC                {  }
-    ;
-
-expr_typ_3:         '(' expression ')'                      {  }
+    |               '(' expression ')'                      {  }
     |               value                                   {  }
     |               ident                                   {  }
     |               function_call                           {  }
@@ -241,21 +219,23 @@ return_stmt:        RETURN expression                   {  }
 enum_stmt:          ENUM enum_name '{' enum_elements '}'   {  }
     ;
 
-enum_elements:  /* empty */                                  {  }
-    |               ident                                    {  }
-    |               ident '=' expression                     {  }
-    |               enum_list_ext ',' ident                  {  }
-    |               enum_list_ext ',' ident '=' expression   {  }
-    ;
 enum_name:          /* empty */                         {  }
     |               ident                               {  }
     ;
-enum_list_ext:      /* empty */                              {  }
+    
+enum_elements:      /* empty */                              {  }
     |               ident                                    {  }
     |               ident '=' expression                     {  }
     |               enum_list_ext ',' ident                  {  }
     |               enum_list_ext ',' ident '=' expression   {  }
     ;
+
+enum_list_ext:      ident                                    {  }
+    |               ident '=' expression                     {  }
+    |               enum_list_ext ',' ident                  {  }
+    |               enum_list_ext ',' ident '=' expression   {  }
+    ;
+    
 type:               TYPE_INT        {  }
     |               TYPE_FLOAT      {  }
     |               TYPE_CHAR       {  }
