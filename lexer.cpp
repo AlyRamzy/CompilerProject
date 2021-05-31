@@ -528,7 +528,7 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "lexer.l"
 #line 2 "lexer.l"
-#include "utils.h"
+#include "parse_tree/parse_tree.h"
 #include "parser.hpp"
 #include <stdio.h>
 using namespace std;
@@ -840,127 +840,127 @@ curLoc.pos++;
 case 5:
 YY_RULE_SETUP
 #line 28 "lexer.l"
-saveLoc(); return TYPE_INT;   
+saveLoc(); return TYPE_INT_TOKEN;   
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 29 "lexer.l"
-saveLoc(); return TYPE_FLOAT; 
+saveLoc(); return TYPE_FLOAT_TOKEN; 
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 30 "lexer.l"
-saveLoc(); return TYPE_CHAR;  
+saveLoc(); return TYPE_CHAR_TOKEN;  
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 31 "lexer.l"
-saveLoc(); return TYPE_BOOL;  
+saveLoc(); return TYPE_BOOL_TOKEN;  
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 32 "lexer.l"
-saveLoc(); return TYPE_VOID;  
+saveLoc(); return TYPE_VOID_TOKEN;  
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 34 "lexer.l"
-saveLoc(); return CONST;       
+saveLoc(); return CONST_TOKEN;       
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 35 "lexer.l"
-saveLoc(); return IF;           
+saveLoc(); return IF_TOKEN;           
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 36 "lexer.l"
-saveLoc(); return ELSE;        
+saveLoc(); return ELSE_TOKEN;        
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 37 "lexer.l"
-saveLoc(); return SWITCH;      
+saveLoc(); return SWITCH_TOKEN;      
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 38 "lexer.l"
-saveLoc(); return CASE;        
+saveLoc(); return CASE_TOKEN;        
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 39 "lexer.l"
-saveLoc(); return DEFAULT;     
+saveLoc(); return DEFAULT_TOKEN;     
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 40 "lexer.l"
-saveLoc(); return FOR;         
+saveLoc(); return FOR_TOKEN;         
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 41 "lexer.l"
-saveLoc(); return WHILE;       
+saveLoc(); return WHILE_TOKEN;       
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 42 "lexer.l"
-saveLoc(); return REPEAT;      
+saveLoc(); return REPEAT_TOKEN;      
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 43 "lexer.l"
-saveLoc(); return UNTIL;       
+saveLoc(); return UNTIL_TOKEN;       
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 44 "lexer.l"
-saveLoc(); return BREAK;       
+saveLoc(); return BREAK_TOKEN;       
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 45 "lexer.l"
-saveLoc(); return CONTINUE;    
+saveLoc(); return CONTINUE_TOKEN;    
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 46 "lexer.l"
-saveLoc(); return RETURN;      
+saveLoc(); return RETURN_TOKEN;      
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 47 "lexer.l"
-saveLoc(); return ENUM;
+saveLoc(); return ENUM_TOKEN;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 49 "lexer.l"
-saveLoc(); return EQ;           
+saveLoc(); return EQ_TOKEN;           
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 50 "lexer.l"
-saveLoc(); return NEQ;       
+saveLoc(); return NEQ_TOKEN;       
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 51 "lexer.l"
-saveLoc(); return GTE;   
+saveLoc(); return GTE_TOKEN;   
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 52 "lexer.l"
-saveLoc(); return LTE;                 
+saveLoc(); return LTE_TOKEN;                 
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 53 "lexer.l"
-saveLoc(); return LOGICAL_AND;     
+saveLoc(); return LOGICAL_AND_TOKEN;     
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 54 "lexer.l"
-saveLoc(); return LOGICAL_OR;      
+saveLoc(); return LOGICAL_OR_TOKEN;      
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
@@ -970,32 +970,32 @@ saveLoc(); return yytext[0];
 case 31:
 YY_RULE_SETUP
 #line 57 "lexer.l"
-tokenize(); return INTEGER;        
+tokenize(); return INTEGER_TOKEN;        
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 58 "lexer.l"
-tokenize(); return FLOAT;          
+tokenize(); return FLOAT_TOKEN;          
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 59 "lexer.l"
-tokenize(); return CHAR;           
+tokenize(); return CHAR_TOKEN;           
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 60 "lexer.l"
-tokenize(); return BOOL;           
+tokenize(); return BOOL_TOKEN;           
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 61 "lexer.l"
-tokenize(); return BOOL;           
+tokenize(); return BOOL_TOKEN;           
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 62 "lexer.l"
-tokenize(); return IDENTIFIER;     
+tokenize(); return IDENTIFIER_TOKEN;     
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
@@ -2021,7 +2021,7 @@ void saveLoc() {
     yylval.location = curLoc;
     yylval.location.pos++;
     
-    printf( "%s\t", yytext);
+
 
     advanceCursor();
 }
@@ -2032,7 +2032,7 @@ void tokenize() {
     yylval.token.value = strdup(yytext);
     yylval.token.loc = curLoc;
     yylval.token.loc.pos++;
-    printf( "%s\t", yytext);
+  
 
     advanceCursor();
 }

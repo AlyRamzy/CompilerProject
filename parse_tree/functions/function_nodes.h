@@ -8,7 +8,8 @@
 /**
  * The node class holding a function in the parse tree.
  */
-struct FunctionNode : public DeclarationNode {
+class FunctionNode : public DeclarationNode {
+    public : 
     VarList paramList;
     BlockNode* body;
 
@@ -67,7 +68,8 @@ struct FunctionNode : public DeclarationNode {
 /**
  * The node class holding a function call expression in the parse tree.
  */
-struct FunctionCallNode : public ExpressionNode {
+class FunctionCallNode : public ExpressionNode {
+    public : 
     IdentifierNode* ident;
     ExprList argList;
     FunctionNode* func;
@@ -102,7 +104,8 @@ struct FunctionCallNode : public ExpressionNode {
 /**
  * The node class holding a return statement in the parse tree.
  */
-struct ReturnStmtNode : public StatementNode {
+class ReturnStmtNode : public StatementNode {
+    public:
     ExpressionNode* value;
     FunctionNode* func;
 

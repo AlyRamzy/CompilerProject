@@ -1,5 +1,5 @@
 %{
-#include "utils.h"
+#include "parse_tree/parse_tree.h"
 #include "parser.hpp"
 #include <stdio.h>
 using namespace std;
@@ -25,41 +25,41 @@ IDENTIFIER          {LETTER}({LETTER}|{DIGIT})*
 \t                                  curLoc.pos += 4;
 " "                                 curLoc.pos++;
 
-"int"                         saveLoc(); return TYPE_INT;   
-"float"                       saveLoc(); return TYPE_FLOAT; 
-"char"                        saveLoc(); return TYPE_CHAR;  
-"bool"                        saveLoc(); return TYPE_BOOL;  
-"void"                        saveLoc(); return TYPE_VOID;  
+"int"                         saveLoc(); return TYPE_INT_TOKEN;   
+"float"                       saveLoc(); return TYPE_FLOAT_TOKEN; 
+"char"                        saveLoc(); return TYPE_CHAR_TOKEN;  
+"bool"                        saveLoc(); return TYPE_BOOL_TOKEN;  
+"void"                        saveLoc(); return TYPE_VOID_TOKEN;  
 
-"const"                       saveLoc(); return CONST;       
-"if"                          saveLoc(); return IF;           
-"else"                        saveLoc(); return ELSE;        
-"switch"                      saveLoc(); return SWITCH;      
-"case"                        saveLoc(); return CASE;        
-"default"                     saveLoc(); return DEFAULT;     
-"for"                         saveLoc(); return FOR;         
-"while"                       saveLoc(); return WHILE;       
-"repeat"                      saveLoc(); return REPEAT;      
-"until"                       saveLoc(); return UNTIL;       
-"break"                       saveLoc(); return BREAK;       
-"continue"                    saveLoc(); return CONTINUE;    
-"return"                      saveLoc(); return RETURN;      
-"enum"                        saveLoc(); return ENUM;
+"const"                       saveLoc(); return CONST_TOKEN;       
+"if"                          saveLoc(); return IF_TOKEN;           
+"else"                        saveLoc(); return ELSE_TOKEN;        
+"switch"                      saveLoc(); return SWITCH_TOKEN;      
+"case"                        saveLoc(); return CASE_TOKEN;        
+"default"                     saveLoc(); return DEFAULT_TOKEN;     
+"for"                         saveLoc(); return FOR_TOKEN;         
+"while"                       saveLoc(); return WHILE_TOKEN;       
+"repeat"                      saveLoc(); return REPEAT_TOKEN;      
+"until"                       saveLoc(); return UNTIL_TOKEN;       
+"break"                       saveLoc(); return BREAK_TOKEN;       
+"continue"                    saveLoc(); return CONTINUE_TOKEN;    
+"return"                      saveLoc(); return RETURN_TOKEN;      
+"enum"                        saveLoc(); return ENUM_TOKEN;
         
-"=="                          saveLoc(); return EQ;           
-"!="                          saveLoc(); return NEQ;       
-">="                          saveLoc(); return GTE;   
-"<="                          saveLoc(); return LTE;                 
-"&&"                          saveLoc(); return LOGICAL_AND;     
-"||"                          saveLoc(); return LOGICAL_OR;      
+"=="                          saveLoc(); return EQ_TOKEN;           
+"!="                          saveLoc(); return NEQ_TOKEN;       
+">="                          saveLoc(); return GTE_TOKEN;   
+"<="                          saveLoc(); return LTE_TOKEN;                 
+"&&"                          saveLoc(); return LOGICAL_AND_TOKEN;     
+"||"                          saveLoc(); return LOGICAL_OR_TOKEN;      
 [-+*/%&|^~!<>=(){}[\],:;]     saveLoc(); return yytext[0];       
 
-{INTEGER}                     tokenize(); return INTEGER;        
-{FLOAT}                       tokenize(); return FLOAT;          
-(\'.\')                       tokenize(); return CHAR;           
-"true"                        tokenize(); return BOOL;           
-"false"                       tokenize(); return BOOL;           
-{IDENTIFIER}                  tokenize(); return IDENTIFIER;     
+{INTEGER}                     tokenize(); return INTEGER_TOKEN;        
+{FLOAT}                       tokenize(); return FLOAT_TOKEN;          
+(\'.\')                       tokenize(); return CHAR_TOKEN;           
+"true"                        tokenize(); return BOOL_TOKEN;           
+"false"                       tokenize(); return BOOL_TOKEN;           
+{IDENTIFIER}                  tokenize(); return IDENTIFIER_TOKEN;     
 
 %%
 
@@ -74,7 +74,7 @@ void saveLoc() {
     yylval.location = curLoc;
     yylval.location.pos++;
     
-    printf( "%s\t", yytext);
+
 
     advanceCursor();
 }
@@ -85,7 +85,7 @@ void tokenize() {
     yylval.token.value = strdup(yytext);
     yylval.token.loc = curLoc;
     yylval.token.loc.pos++;
-    printf( "%s\t", yytext);
+  
 
     advanceCursor();
 }

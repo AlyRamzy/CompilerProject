@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
+
 
 #include "../utils.h"
 
@@ -110,7 +110,8 @@ public:
 /**
  * The node class holding a data type in the parse tree.
  */
-struct TypeNode : public Node {
+class TypeNode : public Node {
+    public :
     dataTypes type;
     TypeNode(const Location& loc, dataTypes type) : Node(loc) {
         this->type = type;
@@ -124,7 +125,8 @@ struct TypeNode : public Node {
 /**
  * The node class representing a syntax error statement.
  */
-struct ErrorNode : public StatementNode {
+class ErrorNode : public StatementNode {
+    public :
     string what;
 
     ErrorNode(const Location& loc, const string& what) : StatementNode(loc) {

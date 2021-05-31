@@ -8,7 +8,8 @@
 /**
  * The node class holding a block of code in the parse tree.
  */
-struct BlockNode : public StatementNode {
+class BlockNode : public StatementNode {
+    public:
     StmtList statements;
 
     BlockNode() {}
@@ -42,7 +43,8 @@ struct BlockNode : public StatementNode {
 /**
  * The node class holding a variable or constant declaration statement in the parse tree.
  */
-struct VarDeclarationNode : public DeclarationNode {
+class VarDeclarationNode : public DeclarationNode {
+    public : 
     ExpressionNode* value;
     bool constant;
 
@@ -85,7 +87,8 @@ struct VarDeclarationNode : public DeclarationNode {
 /**
  * The node class holding multiple variables or constants declaration statement in the parse tree.
  */
-struct MultiVarDeclarationNode : public StatementNode {
+class MultiVarDeclarationNode : public StatementNode {
+    public : 
     TypeNode* type;
     VarList vars;
     bool constant;

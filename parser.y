@@ -1,8 +1,9 @@
 %{
-#include "utils.h"
-#include <stdio.h>
-#include "../parse_tree/parse_tree.h"
 
+#include<iostream>
+#include<string>
+
+#include"parse_tree/parse_tree.h"
 using namespace std;
 
 extern int yylex();
@@ -17,7 +18,6 @@ StatementNode* programRoot = NULL;
     BlockNode*                  blockNode;
     StatementNode*              stmtNode;
     VarDeclarationNode*         varDeclNode;
-    MultiVarDeclarationNode*    multiVarDeclNode;
     IfNode*                     ifNode;
     SwitchNode*                 switchNode;
     CaseLabelNode*              caseStmtNode;
@@ -41,60 +41,59 @@ StatementNode* programRoot = NULL;
 }
 
 // Data types
-%token <location> TYPE_INT
-%token <location> TYPE_FLOAT
-%token <location> TYPE_CHAR
-%token <location> TYPE_BOOL
-%token <location> TYPE_VOID
+%token <location> TYPE_INT_TOKEN
+%token <location> TYPE_FLOAT_TOKEN
+%token <location> TYPE_CHAR_TOKEN
+%token <location> TYPE_BOOL_TOKEN
+%token <location> TYPE_VOID_TOKEN
 
 // Keywords
-%token <location> CONST
-%token <location> IF
-%token <location> ELSE
-%token <location> SWITCH
-%token <location> CASE
-%token <location> DEFAULT
-%token <location> FOR
-%token <location> WHILE
-%token <location> REPEAT
-%token <location> UNTIL
-%token <location> BREAK
-%token <location> CONTINUE
-%token <location> RETURN
-%token <location> ENUM
+%token <location> CONST_TOKEN
+%token <location> IF_TOKEN
+%token <location> ELSE_TOKEN
+%token <location> SWITCH_TOKEN
+%token <location> CASE_TOKEN
+%token <location> DEFAULT_TOKEN
+%token <location> FOR_TOKEN
+%token <location> WHILE_TOKEN
+%token <location> REPEAT_TOKEN
+%token <location> UNTIL_TOKEN
+%token <location> BREAK_TOKEN
+%token <location> CONTINUE_TOKEN
+%token <location> RETURN_TOKEN
+%token <location> ENUM_TOKEN
 
 // Operators
-%token <location> LOGICAL_AND
-%token <location> LOGICAL_OR
-%token <location> EQ
-%token <location> NEQ
-%token <location> GTE
-%token <location> LTE
+%token <location> LOGICAL_AND_TOKEN
+%token <location> LOGICAL_OR_TOKEN
+%token <location> EQ_TOKEN
+%token <location> NEQ_TOKEN
+%token <location> GTE_TOKEN
+%token <location> LTE_TOKEN
 
 // Values
-%token <token> INTEGER
-%token <token> FLOAT
-%token <token> CHAR
-%token <token> BOOL
-%token <token> IDENTIFIER
+%token <token> INTEGER_TOKEN
+%token <token> FLOAT_TOKEN
+%token <token> CHAR_TOKEN
+%token <token> BOOL_TOKEN
+%token <token> IDENTIFIER_TOKEN
 
 %type <blockNode>           program stmt_block
 %type <stmtNode>            stmt branch_body for_init_stmt
 %type <stmtList>            stmt_list
 %type <varDeclNode>         var_decl
-%type <multiVarDeclNode>    multi_var_decl
-%type <ifNode>              if_stmt unmatched_if_stmt matched_if_stmt
+%type <ifNode>              if_stmt 
 %type <switchNode>          switch_stmt
 %type <caseStmtNode>        case_stmt
 %type <whileNode>           while_stmt
-%type <doWhileNode>         do_while_stmt
+%type <doWhileNode>         repeat_until_stmt
 %type <forNode>             for_stmt for_header
 %type <functionNode>        function function_header
 %type <functionCallNode>    function_call
 %type <returnStmtNode>      return_stmt
 %type <varList>             param_list param_list_ext
 %type <exprList>            arg_list arg_list_ext
-%type <exprNode>            expression expr_1 expr_2 expr_3 for_expr
+%type <exprNode>            expression  for_expr
 %type <typeNode>            type
 %type <valueNode>           value
 %type <identifierNode>      ident
@@ -110,7 +109,7 @@ StatementNode* programRoot = NULL;
         // printf(">> DESTRUCTOR NULL\n");
     }
 }
-<blockNode> <stmtNode> <varDeclNode> <multiVarDeclNode>
+<blockNode> <stmtNode> <varDeclNode> 
 <ifNode> <switchNode> <caseStmtNode>
 <whileNode> <doWhileNode> <forNode>
 <functionNode> <functionCallNode> <returnStmtNode>
@@ -118,20 +117,20 @@ StatementNode* programRoot = NULL;
 <exprNode> <typeNode> <valueNode> <identifierNode>
 
 %right      '='
-%left       LOGICAL_OR
-%left       LOGICAL_AND
+%left       LOGICAL_OR_TOKEN
+%left       LOGICAL_AND_TOKEN
 %left       '|'
 %left       '^'
 %left       '&'
-%left       EQ NEQ
-%left       LTE GTE '<' '>'
+%left       EQ_TOKEN NEQ_TOKEN
+%left       LTE_TOKEN GTE_TOKEN '<' '>'
 %left       '-' '+'
 %left       '*' '/' '%'
 %right      '!' '~'
-%right      U_PLUS U_MINUS
+%right      U_PLUS_TOKEN U_MINUS_TOKEN
 
 %nonassoc   IF_UNMAT
-%nonassoc   ELSE
+%nonassoc   ELSE_TOKEN
 
 %%
 
@@ -150,8 +149,8 @@ stmt_block:         '{' '}'                     { $$ = new BlockNode($<location>
     ;
 
 stmt:               ';'                         { $$ = new StatementNode($<location>1); }
-    |               BREAK ';'                   { $$ = new BreakStmtNode($<location>1); }
-    |               CONTINUE ';'                { $$ = new ContinueStmtNode($<location>1); }
+    |               BREAK_TOKEN ';'                   { $$ = new BreakStmtNode($<location>1); }
+    |               CONTINUE_TOKEN ';'                { $$ = new ContinueStmtNode($<location>1); }
     |               expression ';'              { $$ = new ExprContainerNode($1->loc, $1); }
     |               var_decl ';'                { $$ = $1; }
     |               if_stmt                     { $$ = $1; }
@@ -162,7 +161,7 @@ stmt:               ';'                         { $$ = new StatementNode($<locat
     |               for_stmt                    { $$ = $1; }
     |               function                    { $$ = $1; }
     |               return_stmt ';'             { $$ = $1; }
-    |               enum_stmt ';'               { $$ = $1; }
+    |               enum_stmt ';'               {  }
     |               error ';'                   { $$ = new ErrorNode(curLoc, "invalid syntax"); yyerrok; }
     |               error ')'                   { $$ = new ErrorNode(curLoc, "invalid syntax"); yyerrok; }
     |               error '}'                   { $$ = new ErrorNode(curLoc, "invalid syntax"); yyerrok; }
@@ -176,33 +175,33 @@ branch_body:        stmt                        { $$ = $1; }
 
 
 var_decl:           type ident                              { $$ = new VarDeclarationNode($1, $2); }
-    |               CONST type ident                        { $$ = new VarDeclarationNode($2, $3, NULL, true); }
+    |               CONST_TOKEN type ident                        { $$ = new VarDeclarationNode($2, $3, NULL, true); }
     |               type ident '=' expression               { $$ = new VarDeclarationNode($1, $2, $4); }
-    |               CONST type ident '=' expression         { $$ = new VarDeclarationNode($2, $3, $5, true); }
+    |               CONST_TOKEN type ident '=' expression         { $$ = new VarDeclarationNode($2, $3, $5, true); }
     ;
 
 
 expression:         ident '=' expression                    { $$ = new AssignOprNode($2, $1, $3); }
-    |               expression '+' expression               { $$ = new BinaryOprNode($2, OPR_ADD, $1, $3); }
-    |               expression '-' expression               { $$ = new BinaryOprNode($2, OPR_SUB, $1, $3); }
-    |               expression '*' expression               { $$ = new BinaryOprNode($2, OPR_MUL, $1, $3); }
-    |               expression '/' expression               { $$ = new BinaryOprNode($2, OPR_DIV, $1, $3); }
-    |               expression '%' expression               { $$ = new BinaryOprNode($2, OPR_MOD, $1, $3); }
-    |               expression '&' expression               { $$ = new BinaryOprNode($2, OPR_AND, $1, $3); }
-    |               expression '|' expression               { $$ = new BinaryOprNode($2, OPR_OR, $1, $3); }
-    |               expression '^' expression               { $$ = new BinaryOprNode($2, OPR_XOR, $1, $3); }
-    |               expression LOGICAL_AND expression       { $$ = new BinaryOprNode($2, OPR_LOGICAL_AND, $1, $3); }
-    |               expression LOGICAL_OR expression        { $$ = new BinaryOprNode($2, OPR_LOGICAL_OR, $1, $3); }
-    |               expression '>' expression               { $$ = new BinaryOprNode($2, OPR_GREATER, $1, $3); }
-    |               expression GTE expression               { $$ = new BinaryOprNode($2, OPR_GREATER_EQUAL, $1, $3); }
-    |               expression '<' expression               { $$ = new BinaryOprNode($2, OPR_LESS, $1, $3); }
-    |               expression LTE expression               { $$ = new BinaryOprNode($2, OPR_LESS_EQUAL, $1, $3); }
-    |               expression EQ expression                { $$ = new BinaryOprNode($2, OPR_EQUAL, $1, $3); }
-    |               expression NEQ expression               { $$ = new BinaryOprNode($2, OPR_NOT_EQUAL, $1, $3); }
-    |               '+' expression %prec U_PLUS             { $$ = new UnaryOprNode($1, OPR_U_PLUS, $2); }
-    |               '-' expression %prec U_MINUM            { $$ = new UnaryOprNode($1, OPR_U_MINUS, $2); }
-    |               '~' expression                          { $$ = new UnaryOprNode($1, OPR_NOT, $2); }
-    |               '!' expression                          { $$ = new UnaryOprNode($1, OPR_LOGICAL_NOT, $2); }
+    |               expression '+' expression               { $$ = new BinaryOprNode($2, ADD, $1, $3); }
+    |               expression '-' expression               { $$ = new BinaryOprNode($2, SUB, $1, $3); }
+    |               expression '*' expression               { $$ = new BinaryOprNode($2, MUL, $1, $3); }
+    |               expression '/' expression               { $$ = new BinaryOprNode($2, DIV, $1, $3); }
+    |               expression '%' expression               { $$ = new BinaryOprNode($2, MOD, $1, $3); }
+    |               expression '&' expression               { $$ = new BinaryOprNode($2, AND, $1, $3); }
+    |               expression '|' expression               { $$ = new BinaryOprNode($2, OR, $1, $3); }
+    |               expression '^' expression               { $$ = new BinaryOprNode($2, XOR, $1, $3); }
+    |               expression LOGICAL_AND_TOKEN expression       { $$ = new BinaryOprNode($2, LOGICAL_AND, $1, $3); }
+    |               expression LOGICAL_OR_TOKEN expression        { $$ = new BinaryOprNode($2, LOGICAL_OR, $1, $3); }
+    |               expression '>' expression               { $$ = new BinaryOprNode($2, GT, $1, $3); }
+    |               expression GTE_TOKEN expression               { $$ = new BinaryOprNode($2, GTE, $1, $3); }
+    |               expression '<' expression               { $$ = new BinaryOprNode($2, LT, $1, $3); }
+    |               expression LTE_TOKEN expression               { $$ = new BinaryOprNode($2, LTE, $1, $3); }
+    |               expression EQ_TOKEN expression                { $$ = new BinaryOprNode($2, EQ, $1, $3); }
+    |               expression NEQ_TOKEN expression               { $$ = new BinaryOprNode($2, NEQ, $1, $3); }
+    |               '+' expression %prec U_PLUS_TOKEN             { $$ = new UnaryOprNode($1, U_PLUS, $2); }
+    |               '-' expression %prec U_MINUS_TOKEN            { $$ = new UnaryOprNode($1, U_MINUS, $2); }
+    |               '~' expression                          { $$ = new UnaryOprNode($1, NOT, $2); }
+    |               '!' expression                          { $$ = new UnaryOprNode($1, LOGICAL_NOT, $2); }
     |               '(' expression ')'                      { $$ = new ExprContainerNode($1, $2); }
     |               value                                   { $$ = $1; }
     |               ident                                   { $$ = $1; }
@@ -210,28 +209,28 @@ expression:         ident '=' expression                    { $$ = new AssignOpr
     ;
 
 
-if_stmt:            IF '(' expression ')' branch_body %prec IF_UNMAT    { $$ = new IfNode($1, $3, $5); }
-    |               IF '(' expression ')' branch_body ELSE branch_body  { $$ = new IfNode($1, $3, $5, $7); }
+if_stmt:            IF_TOKEN '(' expression ')' branch_body %prec IF_UNMAT    { $$ = new IfNode($1, $3, $5); }
+    |               IF_TOKEN '(' expression ')' branch_body ELSE_TOKEN branch_body  { $$ = new IfNode($1, $3, $5, $7); }
     ;
 
-switch_stmt:        SWITCH '(' expression ')' branch_body   { $$ = new SwitchNode($1, $3, $5); }
+switch_stmt:        SWITCH_TOKEN '(' expression ')' branch_body   { $$ = new SwitchNode($1, $3, $5); }
     ;
 
-case_stmt:          CASE expression ':' stmt                { $$ = new CaseLabelNode($1, $2, $4); }
-    |               DEFAULT ':' stmt                        { $$ = new CaseLabelNode($1, NULL, $3); }
+case_stmt:          CASE_TOKEN expression ':' stmt                { $$ = new CaseLabelNode($1, $2, $4); }
+    |               DEFAULT_TOKEN ':' stmt                        { $$ = new CaseLabelNode($1, NULL, $3); }
     ;
 
 
-while_stmt:         WHILE '(' expression ')' branch_body                { $$ = new WhileNode($1, $3, $5); }
+while_stmt:         WHILE_TOKEN '(' expression ')' branch_body                { $$ = new WhileNode($1, $3, $5); }
     ;
 
-repeat_until_stmt:  REPEAT branch_body UNTIL '(' expression ')'         { $$ = new DoWhileNode($1, $5, $2); }
+repeat_until_stmt:  REPEAT_TOKEN branch_body UNTIL_TOKEN '(' expression ')'         { $$ = new DoWhileNode($1, $5, $2); }
     ;
 
 for_stmt:           for_header branch_body                              { $$ = $1; $$->body = $2; }
     ;
 
-for_header:         FOR '(' for_init_stmt ';' for_expr ';' for_expr ')' { $$ = new ForNode($1, $3, $5, $7, NULL); }
+for_header:         FOR_TOKEN '(' for_init_stmt ';' for_expr ';' for_expr ')' { $$ = new ForNode($1, $3, $5, $7, NULL); }
     ;
 
 for_init_stmt:      /* empty */                                         { $$ = NULL; }
@@ -270,12 +269,12 @@ arg_list_ext:       expression                          { $$ = new ExprList(); $
     |               arg_list_ext ',' expression         { $$ = $1; $$->push_back($3); }
     ;
 
-return_stmt:        RETURN expression                   { $$ = new ReturnStmtNode($1, $2); }
-    |               RETURN                              { $ = new ReturnStmtNode($1, NULL); }
+return_stmt:        RETURN_TOKEN expression                   { $$ = new ReturnStmtNode($1, $2); }
+    |               RETURN_TOKEN                              { $$ = new ReturnStmtNode($1, NULL); }
     ;
 
 
-enum_stmt:          ENUM enum_name '{' enum_elements '}'   {  }
+enum_stmt:          ENUM_TOKEN enum_name '{' enum_elements '}'   {  }
     ;
 
 enum_name:          /* empty */                         {  }
@@ -295,20 +294,20 @@ enum_list_ext:      ident                                    {  }
     |               enum_list_ext ',' ident '=' expression   {  }
     ;
     
-type:               TYPE_INT        { $$ = new TypeNode($1, DTYPE_INT); }
-    |               TYPE_FLOAT      { $$ = new TypeNode($1, DTYPE_FLOAT); }
-    |               TYPE_CHAR       { $$ = new TypeNode($1, DTYPE_CHAR); }
-    |               TYPE_BOOL       { $$ = new TypeNode($1, DTYPE_BOOL); }
-    |               TYPE_VOID       { $$ = new TypeNode($1, DTYPE_VOID); }
+type:               TYPE_INT_TOKEN        { $$ = new TypeNode($1, INT); }
+    |               TYPE_FLOAT_TOKEN      { $$ = new TypeNode($1, FLOAT); }
+    |               TYPE_CHAR_TOKEN       { $$ = new TypeNode($1, CHAR); }
+    |               TYPE_BOOL_TOKEN       { $$ = new TypeNode($1, BOOL); }
+    |               TYPE_VOID_TOKEN       { $$ = new TypeNode($1, VOID); }
     ;
 
-value:              INTEGER         { $$ = new ValueNode($1.loc, DTYPE_INT, $1.value); delete $1.value; }
-    |               FLOAT           { $$ = new ValueNode($1.loc, DTYPE_FLOAT, $1.value); delete $1.value; }
-    |               CHAR            { $$ = new ValueNode($1.loc, DTYPE_CHAR, $1.value); delete $1.value; }
-    |               BOOL            { $$ = new ValueNode($1.loc, DTYPE_BOOL, $1.value); delete $1.value; }
+value:              INTEGER_TOKEN         { $$ = new ValueNode($1.loc, INT, $1.value); delete $1.value; }
+    |               FLOAT_TOKEN           { $$ = new ValueNode($1.loc, FLOAT, $1.value); delete $1.value; }
+    |               CHAR_TOKEN            { $$ = new ValueNode($1.loc, CHAR, $1.value); delete $1.value; }
+    |               BOOL_TOKEN            { $$ = new ValueNode($1.loc, BOOL, $1.value); delete $1.value; }
     ;
 
-ident:              IDENTIFIER      { $$ = new IdentifierNode($1.loc, $1.value); delete $1.value; }
+ident:              IDENTIFIER_TOKEN      { $$ = new IdentifierNode($1.loc, $1.value); delete $1.value; }
     ;
 
 %%

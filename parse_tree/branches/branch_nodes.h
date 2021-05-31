@@ -9,7 +9,8 @@
 /**
  * The node class holding an if statement in the parse tree.
  */
-struct IfNode : public StatementNode {
+class IfNode : public StatementNode {
+    public : 
     ExpressionNode* cond;
     StatementNode* ifBody;
     StatementNode* elseBody;
@@ -47,7 +48,8 @@ struct IfNode : public StatementNode {
 /**
  * The node class holding a case label in the parse tree.
  */
-struct CaseLabelNode : public StatementNode {
+class CaseLabelNode : public StatementNode {
+    public : 
     ExpressionNode* expr;
     StatementNode* stmt;
 
@@ -73,7 +75,8 @@ struct CaseLabelNode : public StatementNode {
 /**
  * The node class holding a switch statement in the parse tree.
  */
-struct SwitchNode : public StatementNode {
+class SwitchNode : public StatementNode {
+    public : 
     ExpressionNode* cond;
     StatementNode* body;
 
@@ -139,7 +142,8 @@ struct SwitchNode : public StatementNode {
 /**
  * The node class holding a while loop in the parse tree.
  */
-struct WhileNode : public StatementNode {
+class WhileNode : public StatementNode {
+    public:
     ExpressionNode* cond;
     StatementNode* body;
 
@@ -167,7 +171,8 @@ struct WhileNode : public StatementNode {
 /**
  * The node class holding a do-while loop in the parse tree.
  */
-struct DoWhileNode : public StatementNode {
+class DoWhileNode : public StatementNode {
+    public:
     ExpressionNode* cond;
     StatementNode* body;
 
@@ -196,7 +201,8 @@ struct DoWhileNode : public StatementNode {
 /**
  * The node class holding a for loop in the parse tree.
  */
-struct ForNode : public StatementNode {
+class ForNode : public StatementNode {
+    public:
     StatementNode* initStmt;
     ExpressionNode* cond;
     ExpressionNode* inc;
@@ -234,7 +240,8 @@ struct ForNode : public StatementNode {
 /**
  * The node class holding a break statement in the parse tree.
  */
-struct BreakStmtNode : public StatementNode {
+class BreakStmtNode : public StatementNode {
+    public:
 
     BreakStmtNode(const Location& loc) : StatementNode(loc) {}
 
@@ -250,7 +257,8 @@ struct BreakStmtNode : public StatementNode {
 /**
  * The node class holding a continue statement in the parse tree.
  */
-struct ContinueStmtNode : public StatementNode {
+class ContinueStmtNode : public StatementNode {
+    public:
 
     ContinueStmtNode(const Location& loc) : StatementNode(loc) {}
 
