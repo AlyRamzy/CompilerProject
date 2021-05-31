@@ -23,6 +23,11 @@ int main() {
     for (int i = 0; i < n; i=i+1) {
         sum = sum + i;
     }
+    int i=0;
+    repeat{
+        sum = sum + i;
+        i = i + 1;
+    }until(i == 10);
 
     printInt(sum);
 

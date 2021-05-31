@@ -5,9 +5,6 @@
 #include "../statements/statement_nodes.h"
 
 
-/**
- * The node class holding a function in the parse tree.
- */
 class FunctionNode : public DeclarationNode {
     public : 
     VarList paramList;
@@ -65,9 +62,6 @@ class FunctionNode : public DeclarationNode {
     }
 };
 
-/**
- * The node class holding a function call expression in the parse tree.
- */
 class FunctionCallNode : public ExpressionNode {
     public : 
     IdentifierNode* ident;
@@ -101,9 +95,6 @@ class FunctionCallNode : public ExpressionNode {
     }
 };
 
-/**
- * The node class holding a return statement in the parse tree.
- */
 class ReturnStmtNode : public StatementNode {
     public:
     ExpressionNode* value;

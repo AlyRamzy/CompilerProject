@@ -138,9 +138,9 @@ bool WhileNode::analyze(ScopeContext* context) {
     return ret;
 }
 
-bool DoWhileNode::analyze(ScopeContext* context) {
+bool RepeatUntilNode::analyze(ScopeContext* context) {
     if (context->isGlobalScope()) {
-        context->log("do-while-statement is not allowed in global scope", loc, LOG_ERROR);
+        context->log("repeat-until-statement is not allowed in global scope", loc, LOG_ERROR);
         return false;
     }
 

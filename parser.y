@@ -22,7 +22,7 @@ StatementNode* programRoot = NULL;
     SwitchNode*                 switchNode;
     CaseLabelNode*              caseStmtNode;
     WhileNode*                  whileNode;
-    DoWhileNode*                doWhileNode;
+    RepeatUntilNode*            repeatUntilNode;
     ForNode*                    forNode;
     FunctionNode*               functionNode;
     FunctionCallNode*           functionCallNode;
@@ -86,14 +86,14 @@ StatementNode* programRoot = NULL;
 %type <switchNode>          switch_stmt
 %type <caseStmtNode>        case_stmt
 %type <whileNode>           while_stmt
-%type <doWhileNode>         repeat_until_stmt
+%type <repeatUntilNode>     repeat_until_stmt
 %type <forNode>             for_stmt for_header
 %type <functionNode>        function function_header
 %type <functionCallNode>    function_call
 %type <returnStmtNode>      return_stmt
 %type <varList>             param_list param_list_ext
 %type <exprList>            arg_list arg_list_ext
-%type <exprNode>            expression  for_expr
+%type <exprNode>            expression for_expr
 %type <typeNode>            type
 %type <valueNode>           value
 %type <identifierNode>      ident
@@ -111,7 +111,7 @@ StatementNode* programRoot = NULL;
 }
 <blockNode> <stmtNode> <varDeclNode> 
 <ifNode> <switchNode> <caseStmtNode>
-<whileNode> <doWhileNode> <forNode>
+<whileNode> <repeatUntilNode> <forNode>
 <functionNode> <functionCallNode> <returnStmtNode>
 <stmtList> <varList> <exprList>
 <exprNode> <typeNode> <valueNode> <identifierNode>
@@ -149,8 +149,8 @@ stmt_block:         '{' '}'                     { $$ = new BlockNode($<location>
     ;
 
 stmt:               ';'                         { $$ = new StatementNode($<location>1); }
-    |               BREAK_TOKEN ';'                   { $$ = new BreakStmtNode($<location>1); }
-    |               CONTINUE_TOKEN ';'                { $$ = new ContinueStmtNode($<location>1); }
+    |               BREAK_TOKEN ';'             { $$ = new BreakStmtNode($<location>1); }
+    |               CONTINUE_TOKEN ';'          { $$ = new ContinueStmtNode($<location>1); }
     |               expression ';'              { $$ = new ExprContainerNode($1->loc, $1); }
     |               var_decl ';'                { $$ = $1; }
     |               if_stmt                     { $$ = $1; }
@@ -162,10 +162,6 @@ stmt:               ';'                         { $$ = new StatementNode($<locat
     |               function                    { $$ = $1; }
     |               return_stmt ';'             { $$ = $1; }
     |               enum_stmt ';'               {  }
-    |               error ';'                   { $$ = new ErrorNode(curLoc, "invalid syntax"); yyerrok; }
-    |               error ')'                   { $$ = new ErrorNode(curLoc, "invalid syntax"); yyerrok; }
-    |               error '}'                   { $$ = new ErrorNode(curLoc, "invalid syntax"); yyerrok; }
-    ;
     ;
 
 branch_body:        stmt                        { $$ = $1; }
@@ -175,9 +171,9 @@ branch_body:        stmt                        { $$ = $1; }
 
 
 var_decl:           type ident                              { $$ = new VarDeclarationNode($1, $2); }
-    |               CONST_TOKEN type ident                        { $$ = new VarDeclarationNode($2, $3, NULL, true); }
+    |               CONST_TOKEN type ident                  { $$ = new VarDeclarationNode($2, $3, NULL, true); }
     |               type ident '=' expression               { $$ = new VarDeclarationNode($1, $2, $4); }
-    |               CONST_TOKEN type ident '=' expression         { $$ = new VarDeclarationNode($2, $3, $5, true); }
+    |               CONST_TOKEN type ident '=' expression   { $$ = new VarDeclarationNode($2, $3, $5, true); }
     ;
 
 
@@ -190,16 +186,16 @@ expression:         ident '=' expression                    { $$ = new AssignOpr
     |               expression '&' expression               { $$ = new BinaryOprNode($2, AND, $1, $3); }
     |               expression '|' expression               { $$ = new BinaryOprNode($2, OR, $1, $3); }
     |               expression '^' expression               { $$ = new BinaryOprNode($2, XOR, $1, $3); }
-    |               expression LOGICAL_AND_TOKEN expression       { $$ = new BinaryOprNode($2, LOGICAL_AND, $1, $3); }
-    |               expression LOGICAL_OR_TOKEN expression        { $$ = new BinaryOprNode($2, LOGICAL_OR, $1, $3); }
+    |               expression LOGICAL_AND_TOKEN expression { $$ = new BinaryOprNode($2, LOGICAL_AND, $1, $3); }
+    |               expression LOGICAL_OR_TOKEN expression  { $$ = new BinaryOprNode($2, LOGICAL_OR, $1, $3); }
     |               expression '>' expression               { $$ = new BinaryOprNode($2, GT, $1, $3); }
-    |               expression GTE_TOKEN expression               { $$ = new BinaryOprNode($2, GTE, $1, $3); }
+    |               expression GTE_TOKEN expression         { $$ = new BinaryOprNode($2, GTE, $1, $3); }
     |               expression '<' expression               { $$ = new BinaryOprNode($2, LT, $1, $3); }
-    |               expression LTE_TOKEN expression               { $$ = new BinaryOprNode($2, LTE, $1, $3); }
-    |               expression EQ_TOKEN expression                { $$ = new BinaryOprNode($2, EQ, $1, $3); }
-    |               expression NEQ_TOKEN expression               { $$ = new BinaryOprNode($2, NEQ, $1, $3); }
-    |               '+' expression %prec U_PLUS_TOKEN             { $$ = new UnaryOprNode($1, U_PLUS, $2); }
-    |               '-' expression %prec U_MINUS_TOKEN            { $$ = new UnaryOprNode($1, U_MINUS, $2); }
+    |               expression LTE_TOKEN expression         { $$ = new BinaryOprNode($2, LTE, $1, $3); }
+    |               expression EQ_TOKEN expression          { $$ = new BinaryOprNode($2, EQ, $1, $3); }
+    |               expression NEQ_TOKEN expression         { $$ = new BinaryOprNode($2, NEQ, $1, $3); }
+    |               '+' expression %prec U_PLUS_TOKEN       { $$ = new UnaryOprNode($1, U_PLUS, $2); }
+    |               '-' expression %prec U_MINUS_TOKEN      { $$ = new UnaryOprNode($1, U_MINUS, $2); }
     |               '~' expression                          { $$ = new UnaryOprNode($1, NOT, $2); }
     |               '!' expression                          { $$ = new UnaryOprNode($1, LOGICAL_NOT, $2); }
     |               '(' expression ')'                      { $$ = new ExprContainerNode($1, $2); }
@@ -209,7 +205,7 @@ expression:         ident '=' expression                    { $$ = new AssignOpr
     ;
 
 
-if_stmt:            IF_TOKEN '(' expression ')' branch_body %prec IF_UNMAT    { $$ = new IfNode($1, $3, $5); }
+if_stmt:            IF_TOKEN '(' expression ')' branch_body %prec IF_UNMAT          { $$ = new IfNode($1, $3, $5); }
     |               IF_TOKEN '(' expression ')' branch_body ELSE_TOKEN branch_body  { $$ = new IfNode($1, $3, $5, $7); }
     ;
 
@@ -224,7 +220,7 @@ case_stmt:          CASE_TOKEN expression ':' stmt                { $$ = new Cas
 while_stmt:         WHILE_TOKEN '(' expression ')' branch_body                { $$ = new WhileNode($1, $3, $5); }
     ;
 
-repeat_until_stmt:  REPEAT_TOKEN branch_body UNTIL_TOKEN '(' expression ')'         { $$ = new DoWhileNode($1, $5, $2); }
+repeat_until_stmt:  REPEAT_TOKEN branch_body UNTIL_TOKEN '(' expression ')'   { $$ = new RepeatUntilNode($1, $5, $2); }
     ;
 
 for_stmt:           for_header branch_body                              { $$ = $1; $$->body = $2; }

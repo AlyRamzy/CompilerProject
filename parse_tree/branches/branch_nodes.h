@@ -5,10 +5,6 @@
 #include "../statements/statement_nodes.h"
 #include "../expressions/expression_nodes.h"
 
-
-/**
- * The node class holding an if statement in the parse tree.
- */
 class IfNode : public StatementNode {
     public : 
     ExpressionNode* cond;
@@ -45,9 +41,6 @@ class IfNode : public StatementNode {
     }
 };
 
-/**
- * The node class holding a case label in the parse tree.
- */
 class CaseLabelNode : public StatementNode {
     public : 
     ExpressionNode* expr;
@@ -72,22 +65,16 @@ class CaseLabelNode : public StatementNode {
     }
 };
 
-/**
- * The node class holding a switch statement in the parse tree.
- */
 class SwitchNode : public StatementNode {
     public : 
     ExpressionNode* cond;
     StatementNode* body;
 
-    //
-    // NOTE: the following variables will be computed after calling analyze function
-    //
-    bool hasDefaultLabel = false;                   // Whether this switch has default label or not
-    unordered_map<int, CaseLabelNode*> caseMap;     // Map of all case constant integer values
-    ExprList caseLabels;                            // List of all case expression nodes in this switch
-    vector<StmtList> caseStmts;                     // List of statements corresponding to each case label
-    VarList initializedVars;                        // List of declared variables with initialization, used to detect cross variables initialization
+    bool hasDefaultLabel = false;                   
+    unordered_map<int, CaseLabelNode*> caseMap;     
+    ExprList caseLabels;                            
+    vector<StmtList> caseStmts;                     
+    VarList initializedVars;                       
 
 
     SwitchNode(const Location& loc, ExpressionNode* cond, StatementNode* body) : StatementNode(loc) {
@@ -139,9 +126,6 @@ class SwitchNode : public StatementNode {
     }
 };
 
-/**
- * The node class holding a while loop in the parse tree.
- */
 class WhileNode : public StatementNode {
     public:
     ExpressionNode* cond;
@@ -168,20 +152,17 @@ class WhileNode : public StatementNode {
     }
 };
 
-/**
- * The node class holding a do-while loop in the parse tree.
- */
-class DoWhileNode : public StatementNode {
+class RepeatUntilNode : public StatementNode {
     public:
     ExpressionNode* cond;
     StatementNode* body;
 
-    DoWhileNode(const Location& loc, ExpressionNode* cond, StatementNode* body) : StatementNode(loc) {
+    RepeatUntilNode(const Location& loc, ExpressionNode* cond, StatementNode* body) : StatementNode(loc) {
         this->cond = cond;
         this->body = body;
     }
 
-    virtual ~DoWhileNode() {
+    virtual ~RepeatUntilNode() {
         if (cond) delete cond;
         if (body) delete body;
     }
@@ -198,9 +179,6 @@ class DoWhileNode : public StatementNode {
     }
 };
 
-/**
- * The node class holding a for loop in the parse tree.
- */
 class ForNode : public StatementNode {
     public:
     StatementNode* initStmt;
@@ -237,9 +215,6 @@ class ForNode : public StatementNode {
     }
 };
 
-/**
- * The node class holding a break statement in the parse tree.
- */
 class BreakStmtNode : public StatementNode {
     public:
 
@@ -254,9 +229,6 @@ class BreakStmtNode : public StatementNode {
     }
 };
 
-/**
- * The node class holding a continue statement in the parse tree.
- */
 class ContinueStmtNode : public StatementNode {
     public:
 

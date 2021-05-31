@@ -3,10 +3,6 @@
 
 #include "../basic_nodes.h"
 
-
-/**
- * An expression container class.
- */
 class ExprContainerNode : public ExpressionNode {
     public :
     ExpressionNode* expr;
@@ -32,9 +28,6 @@ class ExprContainerNode : public ExpressionNode {
     }
 };
 
-/**
- * The node class holding an assignment operator in the parse tree.
- */
 class AssignOprNode : public ExpressionNode {
     public :
     ExpressionNode* lhs;
@@ -59,9 +52,6 @@ class AssignOprNode : public ExpressionNode {
     }
 };
 
-/**
- * The node class holding a binary operator in the parse tree.
- */
 class BinaryOprNode : public ExpressionNode {
     public:
     operations opr;
@@ -94,9 +84,6 @@ class BinaryOprNode : public ExpressionNode {
     }
 };
 
-/**
- * The node class holding a unary operator in the parse tree.
- */
 class UnaryOprNode : public ExpressionNode {
     public :
     operations opr;
@@ -131,9 +118,6 @@ class UnaryOprNode : public ExpressionNode {
     }
 };
 
-/**
- * The node class holding an identifier in the parse tree.
- */
 class IdentifierNode : public ExpressionNode {
     public :
     string name;
@@ -153,9 +137,6 @@ class IdentifierNode : public ExpressionNode {
     }
 };
 
-/**
- * The node class holding a value in the parse tree.
- */
 class ValueNode : public ExpressionNode {
     public:
     string value;

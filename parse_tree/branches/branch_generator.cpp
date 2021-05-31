@@ -110,7 +110,7 @@ string WhileNode::generateQuad(quadrublesGenerator* context) {
     return ret;
 }
 
-string DoWhileNode::generateQuad(quadrublesGenerator* context) {
+string RepeatUntilNode::generateQuad(quadrublesGenerator* context) {
     string ret;
     int label1 = context->labelCounter++;
     int label2 = context->labelCounter++;
@@ -128,26 +128,13 @@ string DoWhileNode::generateQuad(quadrublesGenerator* context) {
 
     ret += "L" + to_string(label2) + ":\n";
     ret += cond->generateQuad(context);
-    ret += utils.operationToQuadrables(JNZ, cond->type) + " L" + to_string(label1) + "\n";
+    ret += utils.operationToQuadrables(JZ, cond->type) + " L" + to_string(label1) + "\n";
     ret += "L" + to_string(label3) + ":\n";
 
     return ret;
 }
 
 string ForNode::generateQuad(quadrublesGenerator* context) {
-    /**
-     * InitStmt Code
-     * L1: Cond Code
-     * JMP L3 if Condition is false
-     *
-     * Body Code
-     * L2: Inc. Code
-     * JMP L1
-     *
-     * L3 (exit)
-     *
-     **/
-
     string ret;
     int label1 = context->labelCounter++;
     int label2 = context->labelCounter++;
