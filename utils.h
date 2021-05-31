@@ -61,6 +61,7 @@ enum dataTypes {
     CHAR,
     INT,
     FLOAT,
+    FUNC_PTR,
     ENUM,
     ERROR,
     UNKNOWN
@@ -128,7 +129,9 @@ class Utils {
         dTypes[CHAR]  = {"char", "CHR"};
         dTypes[INT]   = {"int", "INT"};
         dTypes[FLOAT] = {"float", "FLOAT"};
+        dTypes[ENUM]  = {"enum", "ENUM"};
         dTypes[ERROR] = {"type error", "TYPERR"};
+        dTypes[FUNC_PTR] = {"pointer to function", "FNCPTR"};
     }
     string replaceTabsWithSpaces(const string& str) {
         string ret;
