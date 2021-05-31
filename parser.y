@@ -115,7 +115,7 @@ var_decl:           type ident                              {  }
     ;
 
 
-expression:         expression '=' expression               {  }
+expression:         ident '=' expression                    {  }
     |               expression '+' expression               {  }
     |               expression '-' expression               {  }
     |               expression '*' expression               {  }

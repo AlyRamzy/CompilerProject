@@ -1,3 +1,0 @@
-bison.yacc -d -o parser.cpp parser.y
-flex -o lexer.cpp lexer.l
-g++ main.cpp lexer.cpp parser.cpp
