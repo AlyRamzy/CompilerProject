@@ -7,7 +7,8 @@
 /**
  * An expression container class.
  */
-struct ExprContainerNode : public ExpressionNode {
+class ExprContainerNode : public ExpressionNode {
+    public :
     ExpressionNode* expr;
 
     ExprContainerNode(const Location& loc, ExpressionNode* expr) : ExpressionNode(loc) {
@@ -34,7 +35,8 @@ struct ExprContainerNode : public ExpressionNode {
 /**
  * The node class holding an assignment operator in the parse tree.
  */
-struct AssignOprNode : public ExpressionNode {
+class AssignOprNode : public ExpressionNode {
+    public :
     ExpressionNode* lhs;
     ExpressionNode* rhs;
 
@@ -60,7 +62,8 @@ struct AssignOprNode : public ExpressionNode {
 /**
  * The node class holding a binary operator in the parse tree.
  */
-struct BinaryOprNode : public ExpressionNode {
+class BinaryOprNode : public ExpressionNode {
+    public:
     operations opr;
     ExpressionNode* lhs;
     ExpressionNode* rhs;
@@ -94,7 +97,8 @@ struct BinaryOprNode : public ExpressionNode {
 /**
  * The node class holding a unary operator in the parse tree.
  */
-struct UnaryOprNode : public ExpressionNode {
+class UnaryOprNode : public ExpressionNode {
+    public :
     operations opr;
     ExpressionNode* expr;
 
@@ -130,7 +134,8 @@ struct UnaryOprNode : public ExpressionNode {
 /**
  * The node class holding an identifier in the parse tree.
  */
-struct IdentifierNode : public ExpressionNode {
+class IdentifierNode : public ExpressionNode {
+    public :
     string name;
 
     IdentifierNode(const Location& loc, const char* name) : ExpressionNode(loc) {
@@ -151,7 +156,8 @@ struct IdentifierNode : public ExpressionNode {
 /**
  * The node class holding a value in the parse tree.
  */
-struct ValueNode : public ExpressionNode {
+class ValueNode : public ExpressionNode {
+    public:
     string value;
 
     ValueNode(const Location& loc, dataTypes type, const char* value) : ExpressionNode(loc) {

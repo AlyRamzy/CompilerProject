@@ -6,4 +6,6 @@ This is a simple compiler for cpp language based on lex , yacc
 - flex -o lexer.cpp lexer.l
 
 ## to produce the excutable file
-- g++ main.cpp parser.cpp lexer.cpp
+- g++ main.cpp parse_tree/statements/statement_analyzer.cpp parse_tree/statements/statement_generator.cpp parse_tree/expressions/expression_analyzer.cpp parse_tree/expressions/expression_generator.cpp parse_tree/expressions/expression_evaluator.cpp parse_tree/branches/branch_analyzer.cpp parse_tree/branches/branch_generator.cpp parse_tree/functions/function_generator.cpp parse_tree/functions/function_analyzer.cpp lexer.cpp parser.cpp
+
+
