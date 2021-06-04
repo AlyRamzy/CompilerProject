@@ -29,6 +29,12 @@ int main() {
         i = i + 1;
     }until(i == 10);
 
+    int i = 0;
+    repeat{
+        i=i+1;
+        sum=sum+i;
+    }until(i!=10);
+
     printInt(sum);
 
     return 0;
