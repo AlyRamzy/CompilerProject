@@ -4,7 +4,7 @@
 
 #include "manager/scope_context.h"
 #include "manager/quadrubles_generator.h"
-#include "parse_tree/parse_tree.h"
+#include "nodes.h"
 #include "utils.h"
 
 using namespace std;

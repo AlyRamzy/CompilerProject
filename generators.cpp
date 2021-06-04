@@ -1,6 +1,116 @@
-#include "../parse_tree.h"
-#include "../../manager/quadrubles_generator.h"
+#include "nodes.h"
+#include "manager/quadrubles_generator.h"
 
+
+/* -------------------------- expression generators ----------------------------*/
+
+string ExprContainerNode::generateQuad(quadrublesGenerator* context) {
+    return expr->generateQuad(context);
+}
+
+string AssignOprNode::generateQuad(quadrublesGenerator* context) {
+    string ret;
+
+    ret += lhs->generateQuad(context);
+    ret += rhs->generateQuad(context);
+    ret += utils.dtypeConvQuad(rhs->type, type);
+    ret += utils.operationToQuadrables(POP, type) + " " + lhs->reference->alias + "\n";
+
+    if (used) {
+        ret += utils.operationToQuadrables(PUSH, type) + " " + lhs->reference->alias + "\n";
+    }
+
+    return ret;
+}
+
+string BinaryOprNode::generateQuad(quadrublesGenerator* context) {
+    string ret;
+    
+    dataTypes t = max(lhs->type, rhs->type);
+
+    if (used) {
+        ret += lhs->generateQuad(context);
+        ret += utils.dtypeConvQuad(lhs->type, t);
+
+        ret += rhs->generateQuad(context);
+        ret += utils.dtypeConvQuad(rhs->type, t);
+
+        ret += utils.operationToQuadrables(opr, t) + "\n";
+    }
+    else {
+        ret += lhs->generateQuad(context);
+        ret += rhs->generateQuad(context);
+    }
+
+    return ret;
+}
+
+string UnaryOprNode::generateQuad(quadrublesGenerator* context) {
+    string ret;
+    
+    ret += expr->generateQuad(context);
+
+    if (used) {
+        ret += utils.dtypeConvQuad(expr->type, type);
+    }
+
+    switch (opr) {
+        case U_MINUS:
+        case NOT:
+        case LOGICAL_NOT:
+            if (used) {
+                ret += utils.operationToQuadrables(opr, type) + "\n";
+            }
+            break;
+    }
+
+    return ret;
+}
+
+string IdentifierNode::generateQuad(quadrublesGenerator* context) {
+    string ret;
+    if (used) {
+        ret += utils.operationToQuadrables(PUSH, type) + " " + reference->alias + "\n";;
+    }
+    return ret;
+}
+
+string ValueNode::generateQuad(quadrublesGenerator* context) {
+    string ret;
+    if (used) {
+        ret += utils.operationToQuadrables(PUSH, type) + " " + value + "\n";
+    }
+    return ret;
+}
+
+/* ----------------------- statement generators ----------------------*/
+
+string BlockNode::generateQuad(quadrublesGenerator* context) {
+    string ret;
+
+    for (int i = 0; i < statements.size(); ++i) {
+        ret += statements[i]->generateQuad(context);
+    }
+    
+    return ret;
+}
+
+string VarDeclarationNode::generateQuad(quadrublesGenerator* context) {
+    string ret;
+
+    if (value) {
+        ret += value->generateQuad(context);
+        ret += utils.dtypeConvQuad(value->type, type->type);
+    }
+
+    if (value || context->declareFuncParams) {
+        ret += utils.operationToQuadrables(POP, type->type) + " " + alias + "\n";
+    }
+
+    return ret;
+}
+
+/* ------------------------- branch generators --------------------------*/
 
 string IfNode::generateQuad(quadrublesGenerator* context) {
     string ret;
@@ -177,4 +287,49 @@ string BreakStmtNode::generateQuad(quadrublesGenerator* context) {
 
 string ContinueStmtNode::generateQuad(quadrublesGenerator* context) {
     return utils.operationToQuadrables(JMP) + " L" + to_string(context->continueLabels.top()) + "\n";
+}
+
+/* -------------------------------- function generators ------------------------*/
+
+string FunctionNode::generateQuad(quadrublesGenerator* context) {
+    string ret;
+
+    ret += "PROC " + alias + "\n";
+    context->declareFuncParams = true;
+
+    for (int i = 0; i < paramList.size(); ++i) {
+        ret += paramList[i]->generateQuad(context);
+    }
+
+    context->declareFuncParams = false;
+    ret += body->generateQuad(context);
+    ret += "ENDP " + alias + "\n";
+
+    return ret;
+}
+
+string FunctionCallNode::generateQuad(quadrublesGenerator* context) {
+    string ret;
+
+    for (int i = (int) argList.size() - 1; i >= 0; --i) {
+        ret += argList[i]->generateQuad(context);
+        ret += utils.dtypeConvQuad(argList[i]->type, func->paramList[i]->type->type);
+    }
+
+    ret += "CALL " + func->alias + "\n";
+
+    return ret;
+}
+
+string ReturnStmtNode::generateQuad(quadrublesGenerator* context) {
+    string ret;
+
+    if (value) {
+        ret += value->generateQuad(context);
+        ret += utils.dtypeConvQuad(value->type, func->type->type);
+    }
+
+    ret += "RET\n";
+
+    return ret;
 }

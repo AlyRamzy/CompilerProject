@@ -10,7 +10,7 @@
 #include <stack>
 #include <unordered_map>
 
-#include "../parse_tree/parse_tree.h"
+#include "../nodes.h"
 #include "../utils.h"
 
 using namespace std;

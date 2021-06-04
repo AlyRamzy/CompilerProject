@@ -1,6 +1,4 @@
-#include "../parse_tree.h"
-#include "../../manager/scope_context.h"
-
+#include "nodes.h"
 
 int BinaryOprNode::getConstIntValue() {
     int l = lhs->getConstIntValue();

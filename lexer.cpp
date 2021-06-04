@@ -528,7 +528,7 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "lexer.l"
 #line 2 "lexer.l"
-#include "parse_tree/parse_tree.h"
+#include "nodes.h"
 #include "parser.hpp"
 #include <stdio.h>
 using namespace std;

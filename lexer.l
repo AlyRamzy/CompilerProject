@@ -1,5 +1,5 @@
 %{
-#include "parse_tree/parse_tree.h"
+#include "nodes.h"
 #include "parser.hpp"
 #include <stdio.h>
 using namespace std;

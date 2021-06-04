@@ -3,7 +3,7 @@
 #include<iostream>
 #include<string>
 
-#include"parse_tree/parse_tree.h"
+#include"nodes.h"
 using namespace std;
 
 extern int yylex();
