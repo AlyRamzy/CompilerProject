@@ -15,20 +15,13 @@
 
 using namespace std;
 
-
-/**
- * Symbol table type.
- */
 typedef unordered_map<string, DeclarationNode*> SymbolTable;
 
-/**
- * Struct holding scope information.
- */
 class Scope {
 public:
-    scopeType type;         // The type of the scope
-    Node* ptr;              // A pointer to the node of the scope
-    SymbolTable table;      // The symbol table of this scope
+    scopeType type;         
+    Node* ptr;              
+    SymbolTable table;      
 
     Scope(scopeType type, Node* ptr = NULL) {
         this->type = type;
@@ -36,14 +29,8 @@ public:
     }
 };
 
-/**
- * Class holding the current context in the semantic analyzing phase.
- */
 class ScopeContext {
 private:
-    //
-    // Private member variables
-    //
     string sourceFilename;
     vector<string> sourceCode;
     vector<Scope*> scopes;
@@ -52,40 +39,33 @@ private:
     bool warn;
     Utils utils;
 
+    void readSourceCode() {
+        ifstream fin(sourceFilename);
+        if (!fin.is_open()) {
+            return;
+        }
+
+        string line;
+        while (getline(fin, line)) {
+            sourceCode.push_back(utils.replaceTabsWithSpaces(line));
+        }
+        fin.close();
+    }
+
 public:
-    //
-    // Public member variables
-    //
     bool declareFuncParams = false;
     bool initializeVar = false;
 
-public:
-
-    /**
-     * Constructs a new context object.
-     *
-     * @param sourceFilename the filename of the source code to compile.
-     * @param warn           whether to show warning messages or not.
-     */
     ScopeContext(const string& sourceFilename, bool warn = false) {
         this->sourceFilename = sourceFilename;
         this->readSourceCode();
         this->warn = warn;
     }
 
-    /**
-     * Adds a new scope to this context.
-     *
-     * @param type the type of the scope to add.
-     * @param ptr  a pointer to the node of the scope in the parse tree.
-     */
     void addScope(scopeType type, Node* ptr = NULL) {
         scopes.push_back(new Scope(type, ptr));
     }
 
-    /**
-     * Removes the lastly added scope from this context.
-     */
     void popScope() {
         Scope* scope = scopes.back();
         scopes.pop_back();
@@ -108,52 +88,28 @@ public:
         delete scope;
     }
 
-    /**
-     * Checks whether the current scope is the global scope within this context or not.
-     *
-     * @return {@code true} if the current scope is the global scope; {@code false} otherwise.
-     */
     bool isGlobalScope() {
         return scopes.size() == 1;
     }
 
-    /**
-     * Searches for the inner most function scope.
-     *
-     * @return a pointer on the found function scope, or {@code NULL} if not available.
-     */
     FunctionNode* getFunctionScope() {
         for (int i = (int) scopes.size() - 1; i >= 0; --i) {
             if (scopes[i]->type == FUNCTION) {
                 return (FunctionNode*) scopes[i]->ptr;
             }
         }
-
         return NULL;
     }
 
-    /**
-     * Searches for the inner most switch scope.
-     *
-     * @return a pointer on the found switch scope, or {@code NULL} if not available.
-     */
     SwitchNode* getSwitchScope() {
         for (int i = (int) scopes.size() - 1; i >= 0; --i) {
             if (scopes[i]->type == SWITCH) {
                 return (SwitchNode*) scopes[i]->ptr;
             }
         }
-
         return NULL;
     }
 
-    /**
-     * Declares a new symbol in the the lastly added scope in this context.
-     *
-     * @param sym the symbol to add in the symbol table.
-     *
-     * @return {@code true} if the symbol was declared successfully; {@code false} if already declared.
-     */
     bool declareSymbol(DeclarationNode* sym) {
         SymbolTable& table = scopes.back()->table;
 
@@ -161,10 +117,8 @@ public:
             return false;
         }
 
-        // Add symbol for later printing
         symbols.push_back({ scopes.size() - 1, sym });
 
-        // Form a new alias name for the identifier
         int num = aliases[sym->ident->name]++;
 
         if (num > 0) {
@@ -177,29 +131,15 @@ public:
         return true;
     }
 
-    /**
-     * Searches for the given identifier in the symbol table.
-     *
-     * @param identifier the name of the symbol to search for.
-     *
-     * @return a pointer on the found symbol table entry, or {@code NULL} if not available.
-     */
     DeclarationNode* getSymbol(const string& identifier) {
         for (int i = (int) scopes.size() - 1; i >= 0; --i) {
             if (scopes[i]->table.count(identifier)) {
                 return scopes[i]->table[identifier];
             }
         }
-
         return NULL;
     }
 
-    /**
-     * Checks whether this context has a scope that can accept
-     * break statement or not. That is, a loop scope or switch scope.
-     *
-     * @return {@code true} if this context has a break scope, {@code false} otherwise.
-     */
     bool hasBreakScope() {
         for (int i = (int) scopes.size() - 1; i >= 0; --i) {
             if (scopes[i]->type == LOOP || scopes[i]->type == SWITCH) {
@@ -210,12 +150,6 @@ public:
         return false;
     }
 
-    /**
-     * Checks whether this context has a scope that can accept
-     * case statement or not. That is, a switch scope.
-     *
-     * @return {@code true} if this context has a switch scope, {@code false} otherwise.
-     */
     bool hasSwitchScope() {
         for (int i = (int) scopes.size() - 1; i >= 0; --i) {
             if (scopes[i]->type == SWITCH) {
@@ -226,12 +160,6 @@ public:
         return false;
     }
 
-    /**
-     * Checks whether this context has a scope that can accept
-     * continue statement or not. That is, a loop scope.
-     *
-     * @return {@code true} if this context has a continue scope, {@code false} otherwise.
-     */
     bool hasLoopScope() {
         for (int i = (int) scopes.size() - 1; i >= 0; --i) {
             if (scopes[i]->type == LOOP) {
@@ -242,12 +170,6 @@ public:
         return false;
     }
 
-    /**
-     * Checks whether this context has a scope that can accept
-     * return statement or not. That is, a function scope.
-     *
-     * @return {@code true} if this context has a continue scope, {@code false} otherwise.
-     */
     bool hasFunctionScope() {
         for (int i = (int) scopes.size() - 1; i >= 0; --i) {
             if (scopes[i]->type == FUNCTION) {
@@ -258,25 +180,15 @@ public:
         return false;
     }
 
-    /**
-     * Logs the given message at the given location in this context.
-     *
-     * @param what  the message to log.
-     * @param loc   the location of the token to point upon in this context.
-     * @param level the log level of this message.
-     */
     void log(const string& what, const Location& loc, logLevel level) {
         string logLvl;
 
         switch (level) {
-            // In future we may change the output stream of each level
-            // and change th colors of the log level and the intended token
             case LOG_ERROR:
                 logLvl = "error";
                 break;
             case LOG_WARNING:
                 if (!warn) {
-                    // Suppress  warnings
                     return;
                 }
                 logLvl = "warning";
@@ -297,11 +209,6 @@ public:
         fprintf(stdout, "\n");
     }
 
-    /**
-     * Returns the symbol table as a string for visualization.
-     *
-     * @return a string representing the symbol table.
-     */
     string getSymbolTableStr() {
         stringstream ss;
 
@@ -322,31 +229,6 @@ public:
         }
 
         return ss.str();
-    }
-
-private:
-
-    /**
-     * Reads the given source code file and fills
-     * the global vector {@code sourceCode}.
-     */
-    void readSourceCode() {
-        // Open input file
-        ifstream fin(sourceFilename);
-
-        // Check that the file was opened successfully
-        if (!fin.is_open()) {
-            return;
-        }
-
-        // Read the source code line by line
-        string line;
-        while (getline(fin, line)) {
-            sourceCode.push_back(utils.replaceTabsWithSpaces(line));
-        }
-
-        // Close
-        fin.close();
     }
 };
 

@@ -197,7 +197,7 @@ union YYSTYPE
     SwitchNode*                 switchNode;
     CaseLabelNode*              caseStmtNode;
     WhileNode*                  whileNode;
-    DoWhileNode*                doWhileNode;
+    RepeatUntilNode*            repeatUntilNode;
     ForNode*                    forNode;
     FunctionNode*               functionNode;
     FunctionCallNode*           functionCallNode;
@@ -1489,9 +1489,9 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
     case 70: /* repeat_until_stmt  */
 #line 103 "parser.y" /* yacc.c:1257  */
       {
-    if (((*yyvaluep).doWhileNode) != NULL) {
-        delete ((*yyvaluep).doWhileNode);
-        ((*yyvaluep).doWhileNode) = NULL;
+    if (((*yyvaluep).repeatUntilNode) != NULL) {
+        delete ((*yyvaluep).repeatUntilNode);
+        ((*yyvaluep).repeatUntilNode) = NULL;
         // printf(">> DESTRUCTOR\n");
     } else {
         // printf(">> DESTRUCTOR NULL\n");
@@ -2072,7 +2072,7 @@ yyreduce:
 
   case 19:
 #line 160 "parser.y" /* yacc.c:1646  */
-    { (yyval.stmtNode) = (yyvsp[-1].doWhileNode); }
+    { (yyval.stmtNode) = (yyvsp[-1].repeatUntilNode); }
 #line 2077 "parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -2342,7 +2342,7 @@ yyreduce:
 
   case 64:
 #line 227 "parser.y" /* yacc.c:1646  */
-    { (yyval.doWhileNode) = new DoWhileNode((yyvsp[-5].location), (yyvsp[-1].exprNode), (yyvsp[-4].stmtNode)); }
+    { (yyval.repeatUntilNode) = new RepeatUntilNode((yyvsp[-5].location), (yyvsp[-1].exprNode), (yyvsp[-4].stmtNode)); }
 #line 2347 "parser.cpp" /* yacc.c:1646  */
     break;
 

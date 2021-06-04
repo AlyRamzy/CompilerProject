@@ -5,9 +5,6 @@
 #include "../expressions/expression_nodes.h"
 
 
-/**
- * The node class holding a block of code in the parse tree.
- */
 class BlockNode : public StatementNode {
     public:
     StmtList statements;
@@ -40,9 +37,6 @@ class BlockNode : public StatementNode {
     }
 };
 
-/**
- * The node class holding a variable or constant declaration statement in the parse tree.
- */
 class VarDeclarationNode : public DeclarationNode {
     public : 
     ExpressionNode* value;
@@ -81,45 +75,6 @@ class VarDeclarationNode : public DeclarationNode {
 
     virtual string declaredType() {
         return (constant ? "const " : "") + type->toString();
-    }
-};
-
-/**
- * The node class holding multiple variables or constants declaration statement in the parse tree.
- */
-class MultiVarDeclarationNode : public StatementNode {
-    public : 
-    TypeNode* type;
-    VarList vars;
-    bool constant;
-
-    MultiVarDeclarationNode(VarDeclarationNode* var) {
-        this->type = new TypeNode(*(var->type));
-        this->constant = var->constant;
-        this->vars.push_back(var);
-    }
-
-    virtual ~MultiVarDeclarationNode() {
-        delete type;
-        for (int i = 0; i < vars.size(); ++i) {
-            delete vars[i];
-        }
-    }
-
-    virtual void addVar(IdentifierNode* ident, ExpressionNode* value = NULL) {
-        vars.push_back(new VarDeclarationNode(new TypeNode(*type), ident, value, constant));
-    }
-
-    virtual bool analyze(ScopeContext* context);
-
-    virtual string generateQuad(quadrublesGenerator* context);
-
-    virtual string toString(int ind = 0) {
-        string ret = string(ind, ' ') + type->toString();
-        for (int i = 0; i < vars.size(); ++i) {
-            ret += (i > 0 ? ", " : "") + vars[i]->toString();
-        }
-        return ret;
     }
 };
 

@@ -79,11 +79,10 @@ public:
 
 class ExpressionNode : public StatementNode {
 public:
-
     dataTypes type = ERROR;        
-    DeclarationNode* reference = NULL;  // Reference variable of the expression is exist
-    bool constant = false;              // Whether the expression is of constant value or not
-    bool used = false;                  // Whether the value of the expression is to be used or not
+    DeclarationNode* reference = NULL;  
+    bool constant = false;              
+    bool used = false;                  
 
     ExpressionNode() {}
 
@@ -107,9 +106,6 @@ public:
     }
 };
 
-/**
- * The node class holding a data type in the parse tree.
- */
 class TypeNode : public Node {
     public :
     dataTypes type;
@@ -122,9 +118,6 @@ class TypeNode : public Node {
     }
 };
 
-/**
- * The node class representing a syntax error statement.
- */
 class ErrorNode : public StatementNode {
     public :
     string what;

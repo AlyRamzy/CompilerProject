@@ -129,7 +129,7 @@ union YYSTYPE
     SwitchNode*                 switchNode;
     CaseLabelNode*              caseStmtNode;
     WhileNode*                  whileNode;
-    DoWhileNode*                doWhileNode;
+    RepeatUntilNode*            repeatUntilNode;
     ForNode*                    forNode;
     FunctionNode*               functionNode;
     FunctionCallNode*           functionCallNode;
