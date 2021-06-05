@@ -98,9 +98,11 @@ string BlockNode::generateQuad(quadrublesGenerator* context) {
 string VarDeclarationNode::generateQuad(quadrublesGenerator* context) {
     string ret;
 
+
     if (value) {
         ret += value->generateQuad(context);
         ret += utils.dtypeConvQuad(value->type, type->type);
+        
     }
 
     if (value || context->declareFuncParams) {
@@ -108,6 +110,16 @@ string VarDeclarationNode::generateQuad(quadrublesGenerator* context) {
     }
 
     return ret;
+}
+
+string EnumDeclarationNode::generateQuad(quadrublesGenerator* context) {
+    string ret ; 
+
+    for (int i = 0; i < paramList.size(); ++i) {
+        ret += paramList[i]->generateQuad(context);
+    }
+    return ret;
+   
 }
 
 /* ------------------------- branch generators --------------------------*/

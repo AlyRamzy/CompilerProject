@@ -138,6 +138,7 @@ union YYSTYPE
     TypeNode*                   typeNode;
     ValueNode*                  valueNode;
     IdentifierNode*             identifierNode;
+    EnumDeclarationNode*        enumDeclarationNode;
 
     StmtList*                   stmtList;
     ExprList*                   exprList;
@@ -146,7 +147,7 @@ union YYSTYPE
     Token token;
     Location location;
 
-#line 150 "parser.hpp" /* yacc.c:1909  */
+#line 151 "parser.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

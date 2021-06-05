@@ -31,6 +31,7 @@ StatementNode* programRoot = NULL;
     TypeNode*                   typeNode;
     ValueNode*                  valueNode;
     IdentifierNode*             identifierNode;
+    EnumDeclarationNode*        enumDeclarationNode;
 
     StmtList*                   stmtList;
     ExprList*                   exprList;
@@ -91,12 +92,13 @@ StatementNode* programRoot = NULL;
 %type <functionNode>        function function_header
 %type <functionCallNode>    function_call
 %type <returnStmtNode>      return_stmt
-%type <varList>             param_list param_list_ext
+%type <varList>             param_list param_list_ext enum_elements enum_list_ext
 %type <exprList>            arg_list arg_list_ext
 %type <exprNode>            expression for_expr
 %type <typeNode>            type
-%type <valueNode>           value
-%type <identifierNode>      ident
+%type <valueNode>           value 
+%type <identifierNode>      ident enum_name
+%type <enumDeclarationNode> enum_stmt  
 
 %type <location>  '-' '+' '*' '/' '%' '&' '|' '^' '~' '!' '<' '>' '=' '(' ')' '{' '}' '[' ']' ',' ':' ';'
 
@@ -111,7 +113,7 @@ StatementNode* programRoot = NULL;
 }
 <blockNode> <stmtNode> <varDeclNode> 
 <ifNode> <switchNode> <caseStmtNode>
-<whileNode> <repeatUntilNode> <forNode>
+<whileNode> <repeatUntilNode> <forNode> <enumDeclarationNode>
 <functionNode> <functionCallNode> <returnStmtNode>
 <stmtList> <varList> <exprList>
 <exprNode> <typeNode> <valueNode> <identifierNode>
@@ -161,7 +163,7 @@ stmt:               ';'                         { $$ = new StatementNode($<locat
     |               for_stmt                    { $$ = $1; }
     |               function                    { $$ = $1; }
     |               return_stmt ';'             { $$ = $1; }
-    |               enum_stmt ';'               {  }
+    |               enum_stmt ';'               { $$ = $1; }
     ;
 
 branch_body:        stmt                        { $$ = $1; }
@@ -270,24 +272,24 @@ return_stmt:        RETURN_TOKEN expression                   { $$ = new ReturnS
     ;
 
 
-enum_stmt:          ENUM_TOKEN enum_name '{' enum_elements '}'   {  }
+enum_stmt:          ENUM_TOKEN enum_name '{' enum_elements '}'   { $$ = new EnumDeclarationNode($1,$2,*$4); }
     ;
 
-enum_name:          /* empty */                         {  }
-    |               ident                               {  }
+enum_name:          /* empty */                         { $$ = NULL; }
+    |               ident                               { $$=$1;  }
     ;
     
-enum_elements:      /* empty */                              {  }
-    |               ident                                    {  }
-    |               ident '=' expression                     {  }
-    |               enum_list_ext ',' ident                  {  }
-    |               enum_list_ext ',' ident '=' expression   {  }
+enum_elements:      /* empty */                              {$$ = new VarList();  }
+    |               ident                                    {$$ = new VarList(); $$->push_back(new VarDeclarationNode(new TypeNode($1->loc, INT), $1)); }
+    |               ident '=' value                     { $$ = new VarList(); $$->push_back(new VarDeclarationNode(new TypeNode($1->loc, INT), $1,$3));}
+    |               enum_list_ext ',' ident                  {$$ = $1; $$->push_back(new VarDeclarationNode(new TypeNode($3->loc, INT), $3)); }
+    |               enum_list_ext ',' ident '=' value   {$$ = $1; $$->push_back(new VarDeclarationNode(new TypeNode($3->loc, INT), $3,$5)); }
     ;
 
-enum_list_ext:      ident                                    {  }
-    |               ident '=' expression                     {  }
-    |               enum_list_ext ',' ident                  {  }
-    |               enum_list_ext ',' ident '=' expression   {  }
+enum_list_ext:      ident                                    {$$ = new VarList(); $$->push_back(new VarDeclarationNode(new TypeNode($1->loc, INT), $1)); }
+    |               ident '=' expression                     { $$ = new VarList(); $$->push_back(new VarDeclarationNode(new TypeNode($1->loc, INT), $1,$3)); }
+    |               enum_list_ext ',' ident                  { $$ = $1; $$->push_back(new VarDeclarationNode(new TypeNode($3->loc, INT), $3)); }
+    |               enum_list_ext ',' ident '=' value   {$$ = $1; $$->push_back(new VarDeclarationNode(new TypeNode($3->loc, INT), $3,$5));   }
     ;
     
 type:               TYPE_INT_TOKEN        { $$ = new TypeNode($1, INT); }

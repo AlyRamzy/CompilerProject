@@ -66,13 +66,17 @@ int main(int argc, char* argv[]) {
     yyparse();
 
     // Apply semantic check and quadruple generation
+   
     if (programRoot != NULL && programRoot->analyze(&scopeContext)) {
+        
         // cout << programRoot->toString() << endl;
         writeToFile(programRoot->generateQuad(&genContext), outputFilename);
+        
         writeToFile(scopeContext.getSymbolTableStr(), symbolTableFilename);
     } else {
         writeToFile("", outputFilename);
     }
+    
 
     // Finalize and release allocated memory
     fclose(yyin);

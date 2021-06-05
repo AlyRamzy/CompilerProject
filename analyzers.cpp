@@ -159,6 +159,7 @@ bool BlockNode::analyze(ScopeContext* context) {
 
     for (int i = 0; i < statements.size(); ++i) {
         ret &= statements[i]->analyze(context);
+       // cout<<ret<<"\t"<<statements[i]->toString()<<endl;
     }
 
     context->popScope();
@@ -208,6 +209,39 @@ bool VarDeclarationNode::analyze(ScopeContext* context) {
     }
 
     return ret;
+}
+bool EnumDeclarationNode::analyze(ScopeContext* context) {
+
+    bool ret = true;
+
+    if (!context->isGlobalScope()) {
+        context->log("a enum-definition is not allowed here", loc, LOG_ERROR);
+        return false;
+    }
+
+   
+    for (int i = 0; i < paramList.size(); ++i) {
+        ret &= paramList[i]->analyze(context);
+        
+        if(paramList[i]->initialized){
+
+            currentValue =  stoi(((ValueNode *)paramList[i]->value)->value)+1;
+   
+        }
+        else{
+            const char * temp = to_string(currentValue).c_str();
+           paramList[i]->value = new ValueNode(paramList[i]->loc, INT,temp);
+           paramList[i]->value->used = true;
+           paramList[i]->initialized = true;
+           currentValue+=1;
+        }
+
+        
+        
+    }
+
+    return ret;
+
 }
 
 /* ------------------------- branch analyzers -----------------------*/

@@ -367,6 +367,63 @@ class VarDeclarationNode : public DeclarationNode {
     }
 };
 
+
+class EnumDeclarationNode : public DeclarationNode {
+    public : 
+    VarList paramList;
+    int currentValue = 0;
+    
+
+    EnumDeclarationNode( const Location& loc,IdentifierNode* ident, const VarList& paramList)
+            : DeclarationNode(loc) {
+        this->ident = ident;
+        this->paramList = paramList;
+   
+       
+    }
+
+    virtual ~EnumDeclarationNode() {
+       
+        if (ident) delete ident;
+        
+
+        for (int i = 0; i < paramList.size(); ++i) {
+            delete paramList[i];
+        }
+    }
+
+    virtual bool analyze(ScopeContext* context);
+
+    virtual string generateQuad(quadrublesGenerator* context);
+
+    virtual string toString(int ind = 0) {
+        string ret = string(ind, ' ')+"(" ;
+        for (int i = 0; i < paramList.size(); ++i) {
+            ret += (i > 0 ? ", " : "") + paramList[i]->toString();
+        }
+        ret += ")\n";
+        
+        return ret;
+    }
+
+    virtual string declaredHeader() {
+        string ret = type->toString() + " " + "(";
+        for (int i = 0; i < paramList.size(); ++i) {
+            ret += (i > 0 ? ", " : "") + paramList[i]->type->toString();
+        }
+        ret += ")";
+        return ret;
+    }
+
+    virtual string declaredType() {
+        string ret = type->toString() + "(*)(";
+        for (int i = 0; i < paramList.size(); ++i) {
+            ret += (i > 0 ? ", " : "") + paramList[i]->type->toString();
+        }
+        ret += ")";
+        return ret;
+    }
+};
 /* --------------------------- branch nodes -------------------------*/
 
 class IfNode : public StatementNode {
