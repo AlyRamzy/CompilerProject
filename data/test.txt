@@ -1,10 +1,10 @@
 
 
 
-enum  {A,B,C,D=20,X,Z,Y};
+
 
 int main() {
-    int x = C;
+    int x = 10;
 
     
 
