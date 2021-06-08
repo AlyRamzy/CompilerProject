@@ -3,7 +3,6 @@
 int BinaryOperationNode::getConstIntValue() {
     int l = lhs->getConstIntValue();
     int r = rhs->getConstIntValue();
-
     switch (opr) {
         case ADD:
             return l + r;
@@ -43,7 +42,6 @@ int BinaryOperationNode::getConstIntValue() {
 
 int UnaryOperationNode::getConstIntValue() {
     int v = expr->getConstIntValue();
-
     switch (opr) {
         case U_PLUS:
             return v;
@@ -54,17 +52,14 @@ int UnaryOperationNode::getConstIntValue() {
         case LOGICAL_NOT:
             return !v;
     }
-
     return -1;
 }
 
 int IdentifierNode::getConstIntValue() {
     VarDeclarationNode* var = dynamic_cast<VarDeclarationNode*>(reference);
-
     if (utils.isValidInt(type) && var != NULL && var->initialized) {
         return var->value->getConstIntValue();
     }
-
     return -1;
 }
 
@@ -77,6 +72,5 @@ int ValueNode::getConstIntValue() {
         case INT:
             return atoi(value.c_str());
     }
-
     return -1;
 }

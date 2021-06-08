@@ -2,6 +2,7 @@
 #define __UTILS_H_
 
 #include<string>
+#include<string.h>
 #include<map>
 #include<vector>
 #include<unordered_map>

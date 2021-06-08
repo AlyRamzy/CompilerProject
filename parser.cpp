@@ -76,7 +76,7 @@ extern Location curLoc;
 
 void yyerror(const char* s);
 
-StatementNode* programRoot = NULL;
+StatementNode* program = NULL;
 
 #line 82 "parser.cpp" /* yacc.c:339  */
 
@@ -1899,13 +1899,13 @@ yyreduce:
     {
         case 2:
 #line 136 "parser.y" /* yacc.c:1646  */
-    { (yyval.blockNode) = NULL; programRoot = new BlockNode(); }
+    { (yyval.blockNode) = NULL; program = new BlockNode(); }
 #line 1904 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 3:
 #line 137 "parser.y" /* yacc.c:1646  */
-    { (yyval.blockNode) = NULL; programRoot = new BlockNode((*(yyvsp[0].stmtList))[0]->loc, *(yyvsp[0].stmtList)); delete (yyvsp[0].stmtList); }
+    { (yyval.blockNode) = NULL; program = new BlockNode((*(yyvsp[0].stmtList))[0]->loc, *(yyvsp[0].stmtList)); delete (yyvsp[0].stmtList); }
 #line 1910 "parser.cpp" /* yacc.c:1646  */
     break;
 

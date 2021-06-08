@@ -11,7 +11,7 @@ extern Location curLoc;
 
 void yyerror(const char* s);
 
-StatementNode* programRoot = NULL;
+StatementNode* program = NULL;
 %}
 
 %union {
@@ -133,8 +133,8 @@ StatementNode* programRoot = NULL;
 
 %%
 
-program:            /* empty */                 { $$ = NULL; programRoot = new BlockNode(); }
-    |               stmt_list                   { $$ = NULL; programRoot = new BlockNode((*$1)[0]->loc, *$1); delete $1; }
+program:            /* empty */                 { $$ = NULL; program = new BlockNode(); }
+    |               stmt_list                   { $$ = NULL; program = new BlockNode((*$1)[0]->loc, *$1); delete $1; }
     ;
 
 stmt_list:          stmt                        { $$ = new StmtList(); $$->push_back($1); }

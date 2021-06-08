@@ -32,6 +32,7 @@ public:
 class ScopeContext {
 private:
     string sourceFilename;
+    string errorFilename;
     vector<string> sourceCode;
     vector<Scope*> scopes;
     unordered_map<string, int> aliases;
@@ -56,8 +57,9 @@ public:
     bool declareFuncParams = false;
     bool initializeVar = false;
 
-    ScopeContext(const string& sourceFilename, bool warn = false) {
+    ScopeContext(const string& sourceFilename,const string& errorFilename, bool warn = false) {
         this->sourceFilename = sourceFilename;
+        this->errorFilename = errorFilename;
         this->readSourceCode();
         this->warn = warn;
     }
@@ -197,16 +199,18 @@ public:
                 logLvl = "note";
                 break;
         }
+        FILE * errorFile = fopen(errorFilename.c_str(), "a");
 
-        fprintf(stdout, "%s:%d:%d: %s: %s\n", sourceFilename.c_str(), loc.lineNum, loc.pos, logLvl.c_str(), what.c_str());
-        fprintf(stdout, "%s\n", sourceCode[loc.lineNum - 1].c_str());
-        fprintf(stdout, "%*s", loc.pos, "^");
+        fprintf(errorFile, "%s:%d:%d: %s: %s\n", sourceFilename.c_str(), loc.lineNum, loc.pos, logLvl.c_str(), what.c_str());
+        fprintf(errorFile, "%s\n", sourceCode[loc.lineNum - 1].c_str());
+        fprintf(errorFile, "%*s", loc.pos, "^");
 
         if (loc.len > 1) {
-            fprintf(stdout, "%s", string(loc.len - 1, '~').c_str());
+            fprintf(errorFile, "%s", string(loc.len - 1, '~').c_str());
         }
 
-        fprintf(stdout, "\n");
+        fprintf(errorFile, "\n");
+        fclose(errorFile);
     }
 
     string getSymbolTableStr() {
