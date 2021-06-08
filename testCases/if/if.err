@@ -1,0 +1,3 @@
+data/if.cpp:4:7: warning: the value of variable 'int b' is never used
+  int b;
+      ^

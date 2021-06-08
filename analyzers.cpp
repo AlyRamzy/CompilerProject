@@ -34,7 +34,7 @@ bool AssignmentOperationNode::analyze(ScopeContext* context, bool valueUsed) {
         return false;
     }
     if (lhs->reference && lhs->constant) {
-        context->log("assignment of read-only variable '" + lhs->reference->declaredHeader() + "'", lhs->loc, LOG_ERROR);
+        context->log("assignment of constant variable '" + lhs->reference->declaredHeader() + "'", lhs->loc, LOG_ERROR);
         return false;
     }
     if (rhs->type == VOID || rhs->type == FUNC_PTR) {

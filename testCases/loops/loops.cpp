@@ -1,7 +1,7 @@
 void main()
 {
 
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 10; i = i + 1)
   {
     int b = 10;
   }
@@ -10,20 +10,21 @@ void main()
 
   while (x < 20)
   {
-    x++;
+    x = x + 1;
   }
 
   x = 0;
 
-  do
+  repeat
   {
-    x++
-  } while (x < 20);
+    x = x + 1;
+  } until (x == 20);
 
   switch (x)
   {
   case 1:
-    x = 10 break;
+    x = 10;
+    break;
 
   default:
     break;

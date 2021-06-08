@@ -339,6 +339,7 @@ function upload(){
     $uploadOk = 1;
 
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    $fileName = pathinfo($target_file,PATHINFO_FILENAME);
 
      if(empty(basename($_FILES["fileToUpload"]["name"]))){
        echo "Please Choose File To Upload";
@@ -369,12 +370,13 @@ function upload(){
       if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
         echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded and compiled.";
         
-        $result =  shell_exec('./a.out '.$target_file.' -o data/out.quad -s data/symbol_table.sym');
+        $result =  shell_exec('./a.out '.$target_file.' -o data/' .$fileName.'.quad -s data/' .$fileName .'.sym -e data/'.$fileName.'.err');
         if(empty($result)){
           echo "Successfully";
 
-          echo '<p><a href="data/out.quad">Download Quad File</a></p>';
-          echo '<p><a href="data/symbol_table.sym">Download Symbol Table File</a></p>';
+          echo '<p><a href="data/'.$fileName.'.quad">Download Quad File</a></p>';
+          echo '<p><a href="data/'.$fileName.'.sym">Download Symbol Table File</a></p>';
+          echo '<p><a href="data/'.$fileName.'.err">Download error File</a></p>';
         }
         else{
           echo "<br></br>";

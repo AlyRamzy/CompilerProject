@@ -1,0 +1,9 @@
+PUSH_INT 0
+POP_INT Mon
+PUSH_INT 1
+POP_INT Sun
+PROC main
+PUSH_INT Mon
+POP_INT x
+ENDP main
+

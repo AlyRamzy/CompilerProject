@@ -1,0 +1,12 @@
+data/enums-error.cpp:9:11: error: 'Tue' was not declared in this scope
+  int x = Tue;
+          ^~~
+data/enums-error.cpp:9:7: warning: the value of variable 'int x' is never used
+  int x = Tue;
+      ^
+data/enums-error.cpp:3:3: warning: the value of variable 'int Mon' is never used
+  Mon,
+  ^~~
+data/enums-error.cpp:4:3: warning: the value of variable 'int Sun' is never used
+  Sun
+  ^~~

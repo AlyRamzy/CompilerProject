@@ -1,0 +1,6 @@
+data/enums.cpp:9:7: warning: the value of variable 'int x' is never used
+  int x = Mon;
+      ^
+data/enums.cpp:4:3: warning: the value of variable 'int Sun' is never used
+  Sun
+  ^~~

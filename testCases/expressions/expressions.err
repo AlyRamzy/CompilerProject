@@ -1,0 +1,6 @@
+data/expressions.cpp:8:8: warning: the value of variable 'bool c' is never used
+  bool c = a && b;
+       ^
+data/expressions.cpp:5:7: warning: the value of variable 'int z' is never used
+  int z = x / y - x;
+      ^
