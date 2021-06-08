@@ -138,15 +138,15 @@ class ErrorNode : public StatementNode {
 
 /* ------------------------ expression nodes ---------------------*/
 
-class ExprContainerNode : public ExpressionNode {
+class ExpressionContainerNode : public ExpressionNode {
     public :
     ExpressionNode* expr;
 
-    ExprContainerNode(const Location& loc, ExpressionNode* expr) : ExpressionNode(loc) {
+    ExpressionContainerNode(const Location& loc, ExpressionNode* expr) : ExpressionNode(loc) {
         this->expr = expr;
     }
 
-    virtual ~ExprContainerNode() {
+    virtual ~ExpressionContainerNode() {
         if (expr) delete expr;
     }
 
@@ -163,17 +163,17 @@ class ExprContainerNode : public ExpressionNode {
     }
 };
 
-class AssignOprNode : public ExpressionNode {
+class AssignmentOperationNode : public ExpressionNode {
     public :
     ExpressionNode* lhs;
     ExpressionNode* rhs;
 
-    AssignOprNode(const Location& loc, ExpressionNode* lhs, ExpressionNode* rhs) : ExpressionNode(loc) {
+    AssignmentOperationNode(const Location& loc, ExpressionNode* lhs, ExpressionNode* rhs) : ExpressionNode(loc) {
         this->lhs = lhs;
         this->rhs = rhs;
     }
 
-    virtual ~AssignOprNode() {
+    virtual ~AssignmentOperationNode() {
         if (lhs) delete lhs;
         if (rhs) delete rhs;
     }
@@ -187,19 +187,19 @@ class AssignOprNode : public ExpressionNode {
     }
 };
 
-class BinaryOprNode : public ExpressionNode {
+class BinaryOperationNode : public ExpressionNode {
     public:
     operations opr;
     ExpressionNode* lhs;
     ExpressionNode* rhs;
 
-    BinaryOprNode(const Location& loc, operations opr, ExpressionNode* lhs, ExpressionNode* rhs) : ExpressionNode(loc) {
+    BinaryOperationNode(const Location& loc, operations opr, ExpressionNode* lhs, ExpressionNode* rhs) : ExpressionNode(loc) {
         this->opr = opr;
         this->lhs = lhs;
         this->rhs = rhs;
     }
 
-    virtual ~BinaryOprNode() {
+    virtual ~BinaryOperationNode() {
         if (lhs) delete lhs;
         if (rhs) delete rhs;
     }
@@ -219,17 +219,17 @@ class BinaryOprNode : public ExpressionNode {
     }
 };
 
-class UnaryOprNode : public ExpressionNode {
+class UnaryOperationNode : public ExpressionNode {
     public :
     operations opr;
     ExpressionNode* expr;
 
-    UnaryOprNode(const Location& loc, operations opr, ExpressionNode* expr) : ExpressionNode(loc) {
+    UnaryOperationNode(const Location& loc, operations opr, ExpressionNode* expr) : ExpressionNode(loc) {
         this->opr = opr;
         this->expr = expr;
     }
 
-    virtual ~UnaryOprNode() {
+    virtual ~UnaryOperationNode() {
         if (expr) delete expr;
     }
 

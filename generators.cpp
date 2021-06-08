@@ -4,11 +4,11 @@
 
 /* -------------------------- expression generators ----------------------------*/
 
-string ExprContainerNode::generateQuad(quadrublesGenerator* context) {
+string ExpressionContainerNode::generateQuad(quadrublesGenerator* context) {
     return expr->generateQuad(context);
 }
 
-string AssignOprNode::generateQuad(quadrublesGenerator* context) {
+string AssignmentOperationNode::generateQuad(quadrublesGenerator* context) {
     string ret;
 
     ret += lhs->generateQuad(context);
@@ -23,7 +23,7 @@ string AssignOprNode::generateQuad(quadrublesGenerator* context) {
     return ret;
 }
 
-string BinaryOprNode::generateQuad(quadrublesGenerator* context) {
+string BinaryOperationNode::generateQuad(quadrublesGenerator* context) {
     string ret;
     
     dataTypes t = max(lhs->type, rhs->type);
@@ -45,7 +45,7 @@ string BinaryOprNode::generateQuad(quadrublesGenerator* context) {
     return ret;
 }
 
-string UnaryOprNode::generateQuad(quadrublesGenerator* context) {
+string UnaryOperationNode::generateQuad(quadrublesGenerator* context) {
     string ret;
     
     ret += expr->generateQuad(context);

@@ -3,7 +3,7 @@
 
 /* -------------------- expression analyzers ----------------------*/
 
-bool ExprContainerNode::analyze(ScopeContext* context, bool valueUsed) {
+bool ExpressionContainerNode::analyze(ScopeContext* context, bool valueUsed) {
     if (!context->initializeVar && context->isGlobalScope()) {
         context->log("expression is not allowed in global scope", loc, LOG_ERROR);
         return false;
@@ -19,7 +19,7 @@ bool ExprContainerNode::analyze(ScopeContext* context, bool valueUsed) {
     return ret;
 }
 
-bool AssignOprNode::analyze(ScopeContext* context, bool valueUsed) {
+bool AssignmentOperationNode::analyze(ScopeContext* context, bool valueUsed) {
     if (!(rhs->analyze(context, true) & lhs->analyze(context, false))) {
         // Note that I used a bitwise AND to execute both lhs and rhs expressions
         return false;
@@ -52,7 +52,7 @@ bool AssignOprNode::analyze(ScopeContext* context, bool valueUsed) {
     return true;
 }
 
-bool BinaryOprNode::analyze(ScopeContext* context, bool valueUsed) {
+bool BinaryOperationNode::analyze(ScopeContext* context, bool valueUsed) {
     if (!(lhs->analyze(context, valueUsed) & rhs->analyze(context, valueUsed))) {
         // Note that I used a bitwise AND to execute both lhs and rhs expressions
         return false;
@@ -78,7 +78,7 @@ bool BinaryOprNode::analyze(ScopeContext* context, bool valueUsed) {
     return true;
 }
 
-bool UnaryOprNode::analyze(ScopeContext* context, bool valueUsed) {
+bool UnaryOperationNode::analyze(ScopeContext* context, bool valueUsed) {
     if (!expr->analyze(context, valueUsed || utils.isAssign(opr))) {
         return false;
     }
@@ -159,7 +159,6 @@ bool BlockNode::analyze(ScopeContext* context) {
 
     for (int i = 0; i < statements.size(); ++i) {
         ret &= statements[i]->analyze(context);
-       // cout<<ret<<"\t"<<statements[i]->toString()<<endl;
     }
 
     context->popScope();

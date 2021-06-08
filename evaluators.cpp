@@ -1,6 +1,6 @@
 #include "nodes.h"
 
-int BinaryOprNode::getConstIntValue() {
+int BinaryOperationNode::getConstIntValue() {
     int l = lhs->getConstIntValue();
     int r = rhs->getConstIntValue();
 
@@ -41,7 +41,7 @@ int BinaryOprNode::getConstIntValue() {
     return -1;
 }
 
-int UnaryOprNode::getConstIntValue() {
+int UnaryOperationNode::getConstIntValue() {
     int v = expr->getConstIntValue();
 
     switch (opr) {
