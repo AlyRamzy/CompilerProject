@@ -10,7 +10,7 @@ data/semantic-error.cpp:8:7: error: 'int x' redeclared
 data/semantic-error.cpp:11:7: error: variable or field 'y' used without being initialized
   x = y;
       ^
-data/semantic-error.cpp:19:3: error: assignment of read-only variable 'const int c'
+data/semantic-error.cpp:19:3: error: assignment of constant variable 'const int c'
   c = 20;
   ^
 data/semantic-error.cpp:25:5: error: duplicate case value
@@ -40,3 +40,6 @@ data/semantic-error.cpp:13:7: warning: the value of variable 'int z' is never us
 data/semantic-error.cpp:18:13: warning: the value of variable 'const int c' is never used
   const int c = 10;
             ^
+data/semantic-error.cpp:1:5: warning: function 'int sum(int, int)' is never called
+int sum(int x, int y){
+    ^~~
